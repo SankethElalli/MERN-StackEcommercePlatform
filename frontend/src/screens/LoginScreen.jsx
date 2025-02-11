@@ -4,10 +4,10 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
-
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
+import '../assets/styles/custom.css';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -43,9 +43,9 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1 className='animated-title'>Sign In</h1>
 
-      <Form onSubmit={submitHandler}>
+      <Form onSubmit={submitHandler} className='animated-form'>
         <Form.Group className='my-2' controlId='email'>
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -66,7 +66,7 @@ const LoginScreen = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button disabled={isLoading} type='submit' variant='primary'>
+        <Button disabled={isLoading} type='submit' variant='primary' className='animated-button'>
           Sign In
         </Button>
 

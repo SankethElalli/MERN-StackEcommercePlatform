@@ -4,10 +4,10 @@ import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
-
 import { useRegisterMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
+import '../assets/styles/custom.css';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
@@ -50,8 +50,8 @@ const RegisterScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Register</h1>
-      <Form onSubmit={submitHandler}>
+      <h1 className='animated-title'>Register</h1>
+      <Form onSubmit={submitHandler} className='animated-form'>
         <Form.Group className='my-2' controlId='name'>
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -91,7 +91,12 @@ const RegisterScreen = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button disabled={isLoading} type='submit' variant='primary'>
+        <Button
+          disabled={isLoading}
+          type='submit'
+          variant='primary'
+          className='animated-button'
+        >
           Register
         </Button>
 

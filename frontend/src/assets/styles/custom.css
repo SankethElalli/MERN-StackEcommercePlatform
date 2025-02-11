@@ -1,3 +1,153 @@
 .navbar-dark {
   background-color: #000 !important;
 }
+
+.cart-title {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #000000;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.animated-title {
+  animation: fadeInDown 1s ease-in-out;
+}
+
+.animated-form {
+  animation: fadeInUp 1s ease-in-out;
+}
+
+.animated-item {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+.animated-card {
+  animation: fadeIn 1s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.animated-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.animated-img {
+  transition: transform 0.3s ease-in-out;
+}
+
+.animated-img:hover {
+  transform: scale(1.1);
+}
+
+.animated-price {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+.animated-button {
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.animated-button:hover {
+  background-color: #000000;
+  transform: scale(1.05);
+}
+
+.animated-table {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animated-nav {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animated-link {
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.animated-link:hover {
+  color: #000000;
+  transform: scale(1.05);
+}
+
+.animated-carousel {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animated-carousel-item {
+  transition: transform 0.3s ease-in-out;
+}
+
+.animated-carousel-item:hover {
+  transform: scale(1.05);
+}
+
+.animated-caption {
+  animation: fadeInUp 0.5s ease-in-out;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating span {
+  margin-right: 5px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.rating span:hover {
+  transform: scale(1.2);
+}
+
+.rating-text {
+  margin-left: 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.animated-input {
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.animated-input:focus {
+  border-color: #00000000;
+  box-shadow: 0 0 5px rgba(103, 103, 103, 0.5);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

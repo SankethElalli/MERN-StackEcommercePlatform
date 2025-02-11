@@ -9,6 +9,7 @@ import {
 } from '../../slices/usersApiSlice';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import '../../assets/styles/custom.css';
 
 const UserListScreen = () => {
   const { data: users, refetch, isLoading, error } = useGetUsersQuery();
@@ -28,7 +29,7 @@ const UserListScreen = () => {
 
   return (
     <>
-      <h1>Users</h1>
+      <h1 className='animated-title'>Users</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -36,7 +37,7 @@ const UserListScreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Table striped bordered hover responsive className='table-sm'>
+        <Table striped bordered hover responsive className='table-sm animated-table'>
           <thead>
             <tr>
               <th>ID</th>
@@ -48,7 +49,7 @@ const UserListScreen = () => {
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user._id}>
+              <tr key={user._id} className='animated-item'>
                 <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>
@@ -69,13 +70,13 @@ const UserListScreen = () => {
                         to={`/admin/user/${user._id}/edit`}
                         style={{ marginRight: '10px' }}
                         variant='light'
-                        className='btn-sm'
+                        className='btn-sm animated-button'
                       >
                         <FaEdit />
                       </Button>
                       <Button
                         variant='danger'
-                        className='btn-sm'
+                        className='btn-sm animated-button'
                         onClick={() => deleteHandler(user._id)}
                       >
                         <FaTrash style={{ color: 'white' }} />

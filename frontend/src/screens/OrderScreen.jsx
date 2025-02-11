@@ -12,6 +12,7 @@ import {
   useGetPaypalClientIdQuery,
   usePayOrderMutation,
 } from '../slices/ordersApiSlice';
+import '../assets/styles/custom.css';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -70,14 +71,6 @@ const OrderScreen = () => {
     });
   }
 
-  // TESTING ONLY! REMOVE BEFORE PRODUCTION
-  // async function onApproveTest() {
-  //   await payOrder({ orderId, details: { payer: {} } });
-  //   refetch();
-
-  //   toast.success('Order is paid');
-  // }
-
   function onError(err) {
     toast.error(err.message);
   }
@@ -107,11 +100,11 @@ const OrderScreen = () => {
     <Message variant='danger'>{error.data.message}</Message>
   ) : (
     <>
-      <h1>Order {order._id}</h1>
+      <h1 className='animated-title'>Order {order._id}</h1>
       <Row>
         <Col md={8}>
           <ListGroup variant='flush'>
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Shipping</h2>
               <p>
                 <strong>Name: </strong> {order.user.name}
@@ -135,7 +128,7 @@ const OrderScreen = () => {
               )}
             </ListGroup.Item>
 
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Payment Method</h2>
               <p>
                 <strong>Method: </strong>
@@ -148,14 +141,14 @@ const OrderScreen = () => {
               )}
             </ListGroup.Item>
 
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Order Items</h2>
               {order.orderItems.length === 0 ? (
                 <Message>Order is empty</Message>
               ) : (
                 <ListGroup variant='flush'>
                   {order.orderItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
+                    <ListGroup.Item key={index} className='animated-item'>
                       <Row>
                         <Col md={1}>
                           <Image
@@ -182,7 +175,7 @@ const OrderScreen = () => {
           </ListGroup>
         </Col>
         <Col md={4}>
-          <Card>
+          <Card className='animated-card'>
             <ListGroup variant='flush'>
               <ListGroup.Item>
                 <h2>Order Summary</h2>
@@ -219,21 +212,11 @@ const OrderScreen = () => {
                     <Loader />
                   ) : (
                     <div>
-                      {/* THIS BUTTON IS FOR TESTING! REMOVE BEFORE PRODUCTION! */}
-                      {/* <Button
-                        style={{ marginBottom: '10px' }}
-                        onClick={onApproveTest}
-                      >
-                        Test Pay Order
-                      </Button> */}
-
-                      <div>
-                        <PayPalButtons
-                          createOrder={createOrder}
-                          onApprove={onApprove}
-                          onError={onError}
-                        ></PayPalButtons>
-                      </div>
+                      <PayPalButtons
+                        createOrder={createOrder}
+                        onApprove={onApprove}
+                        onError={onError}
+                      ></PayPalButtons>
                     </div>
                   )}
                 </ListGroup.Item>
@@ -248,7 +231,7 @@ const OrderScreen = () => {
                   <ListGroup.Item>
                     <Button
                       type='button'
-                      className='btn btn-block'
+                      className='btn btn-block animated-button'
                       onClick={deliverHandler}
                     >
                       Mark As Delivered

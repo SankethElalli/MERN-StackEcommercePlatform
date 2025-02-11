@@ -12,6 +12,7 @@ import {
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
 import { addToCart, removeFromCart } from '../slices/cartSlice';
+import '../assets/styles/custom.css';
 
 const CartScreen = () => {
   const navigate = useNavigate();
@@ -20,8 +21,6 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  // NOTE: no need for an async function here as we are not awaiting the
-  // resolution of a Promise
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
   };
@@ -37,7 +36,7 @@ const CartScreen = () => {
   return (
     <Row>
       <Col md={8}>
-        <h1 style={{ marginBottom: '20px' }}>Shopping Cart</h1>
+        <h1 className='cart-title animated-title'>Shopping Cart</h1>
         {cartItems.length === 0 ? (
           <Message>
             Your cart is empty <Link to='/'>Go Back</Link>
@@ -45,8 +44,8 @@ const CartScreen = () => {
         ) : (
           <ListGroup variant='flush'>
             {cartItems.map((item) => (
-              <ListGroup.Item key={item._id}>
-                <Row>
+              <ListGroup.Item key={item._id} className='animated-item'>
+                <Row className='align-items-center'>
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
                   </Col>
@@ -85,22 +84,21 @@ const CartScreen = () => {
         )}
       </Col>
       <Col md={4}>
-        <Card>
+        <Card className='animated-card'>
           <ListGroup variant='flush'>
             <ListGroup.Item>
               <h2>
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              $
-              {cartItems
+              ${cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
                 .toFixed(2)}
             </ListGroup.Item>
             <ListGroup.Item>
               <Button
                 type='button'
-                className='btn-block'
+                className='btn-block animated-button'
                 disabled={cartItems.length === 0}
                 onClick={checkoutHandler}
               >

@@ -10,6 +10,7 @@ import {
   useUpdateProductMutation,
   useUploadProductImageMutation,
 } from '../../slices/productsApiSlice';
+import '../../assets/styles/custom.css';
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams();
@@ -84,18 +85,18 @@ const ProductEditScreen = () => {
 
   return (
     <>
-      <Link to='/admin/productlist' className='btn btn-light my-3'>
+      <Link to='/admin/productlist' className='btn btn-light my-3 animated-button'>
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit Product</h1>
+        <h1 className='animated-title'>Edit Product</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? (
           <Loader />
         ) : error ? (
           <Message variant='danger'>{error.data.message}</Message>
         ) : (
-          <Form onSubmit={submitHandler}>
+          <Form onSubmit={submitHandler} className='animated-form'>
             <Form.Group controlId='name'>
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -175,6 +176,7 @@ const ProductEditScreen = () => {
             <Button
               type='submit'
               variant='primary'
+              className='animated-button'
               style={{ marginTop: '1rem' }}
             >
               Update

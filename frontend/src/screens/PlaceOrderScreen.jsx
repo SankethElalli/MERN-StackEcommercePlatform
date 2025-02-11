@@ -8,6 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import Loader from '../components/Loader';
 import { useCreateOrderMutation } from '../slices/ordersApiSlice';
 import { clearCartItems } from '../slices/cartSlice';
+import '../assets/styles/custom.css';
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ const PlaceOrderScreen = () => {
       <Row>
         <Col md={8}>
           <ListGroup variant='flush'>
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Shipping</h2>
               <p>
                 <strong>Address:</strong>
@@ -59,20 +60,20 @@ const PlaceOrderScreen = () => {
               </p>
             </ListGroup.Item>
 
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Payment Method</h2>
               <strong>Method: </strong>
               {cart.paymentMethod}
             </ListGroup.Item>
 
-            <ListGroup.Item>
+            <ListGroup.Item className='animated-item'>
               <h2>Order Items</h2>
               {cart.cartItems.length === 0 ? (
                 <Message>Your cart is empty</Message>
               ) : (
                 <ListGroup variant='flush'>
                   {cart.cartItems.map((item, index) => (
-                    <ListGroup.Item key={index}>
+                    <ListGroup.Item key={index} className='animated-item'>
                       <Row>
                         <Col md={1}>
                           <Image
@@ -100,7 +101,7 @@ const PlaceOrderScreen = () => {
           </ListGroup>
         </Col>
         <Col md={4}>
-          <Card>
+          <Card className='animated-card'>
             <ListGroup variant='flush'>
               <ListGroup.Item>
                 <h2>Order Summary</h2>
@@ -137,7 +138,7 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Button
                   type='button'
-                  className='btn-block'
+                  className='btn-block animated-button'
                   disabled={cart.cartItems === 0}
                   onClick={placeOrderHandler}
                 >

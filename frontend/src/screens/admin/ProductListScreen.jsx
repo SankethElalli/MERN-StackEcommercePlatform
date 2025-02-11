@@ -10,6 +10,7 @@ import {
   useCreateProductMutation,
 } from '../../slices/productsApiSlice';
 import { toast } from 'react-toastify';
+import '../../assets/styles/custom.css';
 
 const ProductListScreen = () => {
   const { pageNumber } = useParams();
@@ -50,10 +51,10 @@ const ProductListScreen = () => {
     <>
       <Row className='align-items-center'>
         <Col>
-          <h1>Products</h1>
+          <h1 className='animated-title'>Products</h1>
         </Col>
         <Col className='text-end'>
-          <Button className='my-3' onClick={createProductHandler}>
+          <Button className='my-3 animated-button' onClick={createProductHandler}>
             <FaPlus /> Create Product
           </Button>
         </Col>
@@ -67,7 +68,7 @@ const ProductListScreen = () => {
         <Message variant='danger'>{error.data.message}</Message>
       ) : (
         <>
-          <Table striped bordered hover responsive className='table-sm'>
+          <Table striped bordered hover responsive className='table-sm animated-table'>
             <thead>
               <tr>
                 <th>ID</th>
@@ -80,7 +81,7 @@ const ProductListScreen = () => {
             </thead>
             <tbody>
               {data.products.map((product) => (
-                <tr key={product._id}>
+                <tr key={product._id} className='animated-item'>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
                   <td>${product.price}</td>
@@ -91,13 +92,13 @@ const ProductListScreen = () => {
                       as={Link}
                       to={`/admin/product/${product._id}/edit`}
                       variant='light'
-                      className='btn-sm mx-2'
+                      className='btn-sm mx-2 animated-button'
                     >
                       <FaEdit />
                     </Button>
                     <Button
                       variant='danger'
-                      className='btn-sm'
+                      className='btn-sm animated-button'
                       onClick={() => deleteHandler(product._id)}
                     >
                       <FaTrash style={{ color: 'white' }} />

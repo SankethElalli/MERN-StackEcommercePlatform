@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { savePaymentMethod } from '../slices/cartSlice';
+import '../assets/styles/custom.css';
 
 const PaymentScreen = () => {
   const navigate = useNavigate();
@@ -30,8 +31,8 @@ const PaymentScreen = () => {
   return (
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
-      <h1>Payment Method</h1>
-      <Form onSubmit={submitHandler}>
+      <h1 className='animated-title'>Payment Method</h1>
+      <Form onSubmit={submitHandler} className='animated-form'>
         <Form.Group>
           <Form.Label as='legend'>Select Method</Form.Label>
           <Col>
@@ -48,7 +49,7 @@ const PaymentScreen = () => {
           </Col>
         </Form.Group>
 
-        <Button type='submit' variant='primary'>
+        <Button type='submit' variant='primary' className='animated-button'>
           Continue
         </Button>
       </Form>

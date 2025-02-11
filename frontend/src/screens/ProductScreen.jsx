@@ -21,6 +21,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import { addToCart } from '../slices/cartSlice';
+import '../assets/styles/custom.css';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -67,7 +68,7 @@ const ProductScreen = () => {
 
   return (
     <>
-      <Link className='btn btn-light my-3' to='/'>
+      <Link className='btn btn-light my-3 animated-button' to='/'>
         Go Back
       </Link>
       {isLoading ? (
@@ -80,10 +81,10 @@ const ProductScreen = () => {
         <>
           <Meta title={product.name} description={product.description} />
           <Row>
-            <Col md={6}>
+            <Col md={6} className='animated-item'>
               <Image src={product.image} alt={product.name} fluid />
             </Col>
-            <Col md={3}>
+            <Col md={3} className='animated-item'>
               <ListGroup variant='flush'>
                 <ListGroup.Item>
                   <h3>{product.name}</h3>
@@ -100,7 +101,7 @@ const ProductScreen = () => {
                 </ListGroup.Item>
               </ListGroup>
             </Col>
-            <Col md={3}>
+            <Col md={3} className='animated-item'>
               <Card>
                 <ListGroup variant='flush'>
                   <ListGroup.Item>
@@ -146,7 +147,7 @@ const ProductScreen = () => {
 
                   <ListGroup.Item>
                     <Button
-                      className='btn-block'
+                      className='btn-block animated-button'
                       type='button'
                       disabled={product.countInStock === 0}
                       onClick={addToCartHandler}
@@ -160,11 +161,11 @@ const ProductScreen = () => {
           </Row>
           <Row className='review'>
             <Col md={6}>
-              <h2>Reviews</h2>
+              <h2 className='animated-title'>Reviews</h2>
               {product.reviews.length === 0 && <Message>No Reviews</Message>}
               <ListGroup variant='flush'>
                 {product.reviews.map((review) => (
-                  <ListGroup.Item key={review._id}>
+                  <ListGroup.Item key={review._id} className='animated-item'>
                     <strong>{review.name}</strong>
                     <Rating value={review.rating} />
                     <p>{review.createdAt.substring(0, 10)}</p>
@@ -172,12 +173,12 @@ const ProductScreen = () => {
                   </ListGroup.Item>
                 ))}
                 <ListGroup.Item>
-                  <h2>Write a Customer Review</h2>
+                  <h2 className='animated-title'>Write a Customer Review</h2>
 
                   {loadingProductReview && <Loader />}
 
                   {userInfo ? (
-                    <Form onSubmit={submitHandler}>
+                    <Form onSubmit={submitHandler} className='animated-form'>
                       <Form.Group className='my-2' controlId='rating'>
                         <Form.Label>Rating</Form.Label>
                         <Form.Control
@@ -208,6 +209,7 @@ const ProductScreen = () => {
                         disabled={loadingProductReview}
                         type='submit'
                         variant='primary'
+                        className='animated-button'
                       >
                         Submit
                       </Button>

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import FormContainer from '../../components/FormContainer';
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
 import {
   useGetUserDetailsQuery,
   useUpdateUserMutation,
 } from '../../slices/usersApiSlice';
+import '../../assets/styles/custom.css';
 
 const UserEditScreen = () => {
   const { id: userId } = useParams();
@@ -32,7 +32,7 @@ const UserEditScreen = () => {
     e.preventDefault();
     try {
       await updateUser({ userId, name, email, isAdmin });
-      toast.success('user updated successfully');
+      toast.success('User updated successfully');
       refetch();
       navigate('/admin/userlist');
     } catch (err) {
@@ -50,11 +50,11 @@ const UserEditScreen = () => {
 
   return (
     <>
-      <Link to='/admin/userlist' className='btn btn-light my-3'>
+      <Link to='/admin/userlist' className='btn btn-light my-3 animated-button'>
         Go Back
       </Link>
       <FormContainer>
-        <h1>Edit User</h1>
+        <h1 className='animated-title'>Edit User</h1>
         {loadingUpdate && <Loader />}
         {isLoading ? (
           <Loader />
@@ -63,7 +63,7 @@ const UserEditScreen = () => {
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Form onSubmit={submitHandler}>
+          <Form onSubmit={submitHandler} className='animated-form'>
             <Form.Group className='my-2' controlId='name'>
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -93,7 +93,7 @@ const UserEditScreen = () => {
               ></Form.Check>
             </Form.Group>
 
-            <Button type='submit' variant='primary'>
+            <Button type='submit' variant='primary' className='animated-button'>
               Update
             </Button>
           </Form>

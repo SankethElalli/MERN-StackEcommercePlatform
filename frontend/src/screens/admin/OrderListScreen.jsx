@@ -4,13 +4,14 @@ import Message from '../../components/Message';
 import Loader from '../../components/Loader';
 import { useGetOrdersQuery } from '../../slices/ordersApiSlice';
 import { Link } from 'react-router-dom';
+import '../../assets/styles/custom.css';
 
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
 
   return (
     <>
-      <h1>Orders</h1>
+      <h1 className='animated-title'>Orders</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -18,7 +19,7 @@ const OrderListScreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Table striped bordered hover responsive className='table-sm'>
+        <Table striped bordered hover responsive className='table-sm animated-table'>
           <thead>
             <tr>
               <th>ID</th>
@@ -32,7 +33,7 @@ const OrderListScreen = () => {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
+              <tr key={order._id} className='animated-item'>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
                 <td>{order.createdAt.substring(0, 10)}</td>
@@ -56,7 +57,7 @@ const OrderListScreen = () => {
                     as={Link}
                     to={`/order/${order._id}`}
                     variant='light'
-                    className='btn-sm'
+                    className='btn-sm animated-button'
                   >
                     Details
                   </Button>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Table, Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaTimes } from 'react-icons/fa';
-
 import { toast } from 'react-toastify';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
@@ -10,6 +9,7 @@ import { useProfileMutation } from '../slices/usersApiSlice';
 import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { Link } from 'react-router-dom';
+import '../assets/styles/custom.css';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -37,9 +37,6 @@ const ProfileScreen = () => {
     } else {
       try {
         const res = await updateProfile({
-          // NOTE: here we don't need the _id in the request payload as this is
-          // not used in our controller.
-          // _id: userInfo._id,
           name,
           email,
           password,
@@ -55,9 +52,9 @@ const ProfileScreen = () => {
   return (
     <Row>
       <Col md={3}>
-        <h2>User Profile</h2>
+        <h2 className='animated-title'>User Profile</h2>
 
-        <Form onSubmit={submitHandler}>
+        <Form onSubmit={submitHandler} className='animated-form'>
           <Form.Group className='my-2' controlId='name'>
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -98,14 +95,14 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
 
-          <Button type='submit' variant='primary'>
+          <Button type='submit' variant='primary' className='animated-button'>
             Update
           </Button>
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
       <Col md={9}>
-        <h2>My Orders</h2>
+        <h2 className='animated-title'>My Orders</h2>
         {isLoading ? (
           <Loader />
         ) : error ? (
@@ -113,7 +110,7 @@ const ProfileScreen = () => {
             {error?.data?.message || error.error}
           </Message>
         ) : (
-          <Table striped hover responsive className='table-sm'>
+          <Table striped hover responsive className='table-sm animated-table'>
             <thead>
               <tr>
                 <th>ID</th>
@@ -148,7 +145,7 @@ const ProfileScreen = () => {
                     <Button
                       as={Link}
                       to={`/order/${order._id}`}
-                      className='btn-sm'
+                      className='btn-sm animated-button'
                       variant='light'
                     >
                       Details

@@ -21,6 +21,8 @@ main {
   overflow: hidden; /* Hide overflow content */
   text-overflow: ellipsis; /* Add ellipsis for long text */
   white-space: nowrap; /* Prevent wrapping */
+  font-size: 1.25rem;
+  color: #333;
 }
 
 table td,
@@ -50,4 +52,30 @@ table th {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+  height: 60px; /* Adjust the height of the navbar */
+}
+
+.navbar-brand {
+  height: 100%;
+  display: flex;
+  align-items: center; /* Center the logo vertically */
+}
+
+.navbar-logo {
+  height: 100%; /* Adjust the height to fit the navbar */
+  max-height: 40px; /* Set a maximum height to prevent it from being too large */
+  width: auto; /* Maintain aspect ratio */
+}
+
+.product-image {
+  height: 200px;
+  object-fit: cover;
+}
+
+.product-price {
+  color: #007bff;
+  font-weight: bold;
 }
