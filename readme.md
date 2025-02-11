@@ -1,4 +1,4 @@
-# WesternStreet multivendor Marketplace 
+# WesternStreet multi-vendor Marketplace 
 
 > Multi-vendor eCommerce platform built with the MERN stack & Redux.
 
