@@ -280,3 +280,7 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
 .search-box button:hover {
   background-color: #717171;
 }
+
+.carousel-margin {
+  margin-top: 20px; /* Adjust the value as needed */
+}
