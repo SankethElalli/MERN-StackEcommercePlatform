@@ -37,7 +37,7 @@ const Header = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
-            <Nav className='ms-auto'>
+            <Nav className='ms-auto navbar-nav'>
               <SearchBox />
               <Nav.Link as={Link} to='/cart'>
                 <FaShoppingCart /> Cart

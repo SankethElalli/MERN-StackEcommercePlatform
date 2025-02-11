@@ -36,6 +36,7 @@ const HomeScreen = () => {
       ) : (
         <>
           <Meta />
+          <br />
           <h1 className='animated-title'>Latest Products</h1>
           <Row>
             {data.products.map((product) => (
