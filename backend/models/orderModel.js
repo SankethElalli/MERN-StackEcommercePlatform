@@ -78,6 +78,9 @@ const orderSchema = mongoose.Schema(
   }
 );
 
+// Add an index on isPaid for better query performance
+orderSchema.index({ isPaid: 1 });
+
 const Order = mongoose.model('Order', orderSchema);
 
 export default Order;

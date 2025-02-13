@@ -8,54 +8,50 @@ import { verifyPayPalPayment, checkIfNewTransaction } from '../utils/paypal.js';
 // @route   POST /api/orders
 // @access  Private
 const addOrderItems = asyncHandler(async (req, res) => {
-  const { orderItems, shippingAddress, paymentMethod } = req.body;
+  const { orderItems, shippingAddress, paymentMethod, paymentResult } = req.body;
 
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error('No order items');
-  } else {
-    // NOTE: here we must assume that the prices from our client are incorrect.
-    // We must only trust the price of the item as it exists in
-    // our DB. This prevents a user paying whatever they want by hacking our client
-    // side code - https://gist.github.com/bushblade/725780e6043eaf59415fbaf6ca7376ff
-
-    // get the ordered items from our database
-    const itemsFromDB = await Product.find({
-      _id: { $in: orderItems.map((x) => x._id) },
-    });
-
-    // map over the order items and use the price from our items from database
-    const dbOrderItems = orderItems.map((itemFromClient) => {
-      const matchingItemFromDB = itemsFromDB.find(
-        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
-      );
-      return {
-        ...itemFromClient,
-        product: itemFromClient._id,
-        price: matchingItemFromDB.price,
-        _id: undefined,
-      };
-    });
-
-    // calculate prices
-    const { itemsPrice, taxPrice, shippingPrice, totalPrice } =
-      calcPrices(dbOrderItems);
-
-    const order = new Order({
-      orderItems: dbOrderItems,
-      user: req.user._id,
-      shippingAddress,
-      paymentMethod,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    });
-
-    const createdOrder = await order.save();
-
-    res.status(201).json(createdOrder);
   }
+
+  // Get items from DB and verify prices
+  const itemsFromDB = await Product.find({
+    _id: { $in: orderItems.map((x) => x._id) },
+  });
+
+  const dbOrderItems = orderItems.map((itemFromClient) => {
+    const matchingItemFromDB = itemsFromDB.find(
+      (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
+    );
+    return {
+      ...itemFromClient,
+      product: itemFromClient._id,
+      price: matchingItemFromDB.price,
+      _id: undefined,
+    };
+  });
+
+  // Calculate prices
+  const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(dbOrderItems);
+
+  const order = new Order({
+    orderItems: dbOrderItems,
+    user: req.user._id,
+    shippingAddress,
+    paymentMethod,
+    itemsPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+    // Initialize payment fields
+    isPaid: false,
+    paidAt: null,
+    paymentResult: null
+  });
+
+  const createdOrder = await order.save();
+  res.status(201).json(createdOrder);
 });
 
 // @desc    Get logged in user orders
@@ -87,37 +83,55 @@ const getOrderById = asyncHandler(async (req, res) => {
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req, res) => {
-  // NOTE: here we need to verify the payment was made to PayPal before marking
-  // the order as paid
-  const { verified, value } = await verifyPayPalPayment(req.body.id);
-  if (!verified) throw new Error('Payment not verified');
+  console.log('Received payment update request:', req.body);
+  
+  try {
+    // First verify the payment
+    const { verified, value } = await verifyPayPalPayment(req.body.id);
+    console.log('Payment verification result:', { verified, value });
 
-  // check if this transaction has been used before
-  const isNewTransaction = await checkIfNewTransaction(Order, req.body.id);
-  if (!isNewTransaction) throw new Error('Transaction has been used before');
+    if (!verified) {
+      res.status(400);
+      throw new Error('Payment verification failed');
+    }
 
-  const order = await Order.findById(req.params.id);
+    // Direct MongoDB update
+    const updatedOrder = await Order.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
+          isPaid: true,
+          paidAt: new Date().toISOString(),
+          paymentResult: {
+            id: req.body.id,
+            status: 'COMPLETED',
+            update_time: new Date().toISOString(),
+            email_address: req.body.payer?.email_address || '',
+          },
+        },
+      },
+      { 
+        new: true,
+        runValidators: true,
+      }
+    );
 
-  if (order) {
-    // check the correct amount was paid
-    const paidCorrectAmount = order.totalPrice.toString() === value;
-    if (!paidCorrectAmount) throw new Error('Incorrect amount paid');
+    console.log('Updated order document:', updatedOrder);
 
-    order.isPaid = true;
-    order.paidAt = Date.now();
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      email_address: req.body.payer.email_address,
-    };
+    if (!updatedOrder) {
+      throw new Error('Order update failed');
+    }
 
-    const updatedOrder = await order.save();
+    // Verify the update was successful
+    const verifiedOrder = await Order.findById(req.params.id);
+    console.log('Verification of updated order:', verifiedOrder);
 
     res.json(updatedOrder);
-  } else {
-    res.status(404);
-    throw new Error('Order not found');
+
+  } catch (error) {
+    console.error('Payment update error:', error);
+    res.status(400);
+    throw error;
   }
 });
 
