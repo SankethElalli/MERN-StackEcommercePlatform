@@ -7,7 +7,6 @@ import {
   Col,
   Image,
   ListGroup,
-  Card,
   Button,
   Form,
 } from 'react-bootstrap';
@@ -21,7 +20,7 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Meta from '../components/Meta';
 import { addToCart } from '../slices/cartSlice';
-import '../assets/styles/custom.css';
+import '../assets/styles/productDetails.css';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -67,111 +66,87 @@ const ProductScreen = () => {
   };
 
   return (
-    <>
-      <Link className='btn btn-light my-3 animated-button' to='/'>
+    <div className="product-detail-container fade-in">
+      <Link className='btn btn-light my-3' to='/'>
         Go Back
       </Link>
+      
       {isLoading ? (
         <Loader />
       ) : error ? (
-        <Message variant='danger'>
-          {error?.data?.message || error.error}
-        </Message>
+        <Message variant='danger'>{error?.data?.message || error.error}</Message>
       ) : (
         <>
-          <Meta title={product.name} description={product.description} />
+          <Meta title={product.name} />
           <Row>
-            <Col md={6} className='animated-item'>
-              <Image src={product.image} alt={product.name} fluid />
+            <Col md={6}>
+              <Image src={product.image} alt={product.name} fluid className='product-detail-image' />
             </Col>
-            <Col md={3} className='animated-item'>
-              <ListGroup variant='flush'>
-                <ListGroup.Item>
-                  <h3>{product.name}</h3>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Rating
-                    value={product.rating}
-                    text={`${product.numReviews} reviews`}
-                  />
-                </ListGroup.Item>
-                <ListGroup.Item>Price: ₹{product.price}</ListGroup.Item>
-                <ListGroup.Item>
-                  Description: {product.description}
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col md={3} className='animated-item'>
-              <Card>
-                <ListGroup variant='flush'>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Price:</Col>
-                      <Col>
-                        <strong>₹{product.price}</strong>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Status:</Col>
-                      <Col>
-                        {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
+            <Col md={6}>
+              <div className="product-info-container">
+                <h1 className='product-detail-title'>{product.name}</h1>
+                <Rating value={product.rating} text={`${product.numReviews} reviews`} />
+                <h2 className='product-detail-price'>₹{product.price}</h2>
+                <p className='product-detail-description'>{product.description}</p>
+                
+                <div className='product-detail-status'>
+                  <Row>
+                    <Col>Status:</Col>
+                    <Col>
+                      {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
+                    </Col>
+                  </Row>
 
-                  {/* Qty Select */}
                   {product.countInStock > 0 && (
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Qty</Col>
-                        <Col>
-                          <Form.Control
-                            as='select'
-                            value={qty}
-                            onChange={(e) => setQty(Number(e.target.value))}
-                          >
-                            {[...Array(product.countInStock).keys()].map(
-                              (x) => (
-                                <option key={x + 1} value={x + 1}>
-                                  {x + 1}
-                                </option>
-                              )
-                            )}
-                          </Form.Control>
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
+                    <Row className='mt-3'>
+                      <Col>Qty:</Col>
+                      <Col>
+                        <Form.Control
+                          as='select'
+                          value={qty}
+                          onChange={(e) => setQty(Number(e.target.value))}
+                          className='quantity-select'
+                        >
+                          {[...Array(product.countInStock).keys()].map((x) => (
+                            <option key={x + 1} value={x + 1}>
+                              {x + 1}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Col>
+                    </Row>
                   )}
 
-                  <ListGroup.Item>
-                    <Button
-                      className='btn-block animated-button'
-                      type='button'
-                      disabled={product.countInStock === 0}
-                      onClick={addToCartHandler}
-                    >
-                      Add To Cart
-                    </Button>
-                  </ListGroup.Item>
-                </ListGroup>
-              </Card>
+                  <Button
+                    className='product-detail-button mt-3'
+                    type='button'
+                    disabled={product.countInStock === 0}
+                    onClick={addToCartHandler}
+                  >
+                    Add To Cart
+                  </Button>
+                </div>
+              </div>
             </Col>
           </Row>
-          <Row className='review'>
-            <Col md={6}>
-              <h2 className='animated-title'>Reviews</h2>
-              {product.reviews.length === 0 && <Message>No Reviews</Message>}
-              <ListGroup variant='flush'>
-                {product.reviews.map((review) => (
-                  <ListGroup.Item key={review._id} className='animated-item'>
-                    <strong>{review.name}</strong>
-                    <Rating value={review.rating} />
-                    <p>{review.createdAt.substring(0, 10)}</p>
-                    <p>{review.comment}</p>
-                  </ListGroup.Item>
-                ))}
+
+          <div className='review-section'>
+            <Row>
+              <Col md={6}>
+                <h2 className='review-title'>Reviews</h2>
+                {product.reviews.length === 0 && <Message>No Reviews</Message>}
+                
+                <ListGroup variant='flush'>
+                  {product.reviews.map((review) => (
+                    <ListGroup.Item key={review._id} className='review-card'>
+                      <strong>{review.name}</strong>
+                      <Rating value={review.rating} />
+                      <p>{review.createdAt.substring(0, 10)}</p>
+                      <p>{review.comment}</p>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+
                 <ListGroup.Item>
                   <h2 className='animated-title'>Write a Customer Review</h2>
 
@@ -220,12 +195,12 @@ const ProductScreen = () => {
                     </Message>
                   )}
                 </ListGroup.Item>
-              </ListGroup>
-            </Col>
-          </Row>
+              </Col>
+            </Row>
+          </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 
