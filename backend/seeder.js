@@ -36,7 +36,12 @@ const importData = async () => {
     const adminUser = createdUsers[0]._id;
 
     const sampleProducts = products.map((product) => {
-      return { ...product, user: adminUser, price: product.price.replace('$', '₹') };
+      return { 
+        ...product, 
+        user: adminUser,
+        // Remove the price replacement since price is already a number
+        category: product.category || 'Sample Category' // Set default category if none exists
+      };
     });
 
     await Product.insertMany(sampleProducts);
