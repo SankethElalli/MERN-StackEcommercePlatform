@@ -336,8 +336,9 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.product-card a {
-  text-decoration: none;
+.product-card a,
+.product-name a {
+  text-decoration: none !important;
   color: inherit;
 }
 
@@ -378,9 +379,27 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
 }
 
 .section-header {
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.modern-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #000;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.section-header {
   position: relative;
   text-align: center;
   margin-bottom: 2rem;
+  padding: 2rem 0;
 }
 
 .modern-title {
@@ -403,6 +422,44 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
   height: 4px;
   background: #000;
   border-radius: 2px;
+}
+
+.modern-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: #000;
+  border-radius: 2px;
+}
+
+.product-card-wrapper {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  background: #fff;
+}
+
+.product-card {
+  height: 100%;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove conflicting hover styles */
+.product-card-wrapper:hover {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Modern Button Styles */
@@ -443,4 +500,151 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
 
 .search-box button:hover {
   background-color: #333333;
+}
+
+/* New styles for seller components */
+.seller-logo {
+  transition: transform 0.3s ease;
+}
+
+.seller-logo:hover {
+  transform: scale(1.1);
+}
+
+.seller-banner {
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+.seller-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.seller-details {
+  flex-grow: 1;
+}
+
+.seller-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.seller-description {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Order table styles */
+.table-responsive {
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.badge {
+  padding: 0.5em 0.8em;
+  font-weight: 500;
+}
+
+.badge.bg-warning {
+  color: #000 !important;
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  border-color: #ddd;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-light:hover {
+  background-color: #e9ecef;
+  border-color: #ddd;
+  color: #000;
+}
+
+/* Empty state message */
+.alert-info a {
+  color: #0d6efd;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.alert-info a:hover {
+  text-decoration: underline;
+}
+
+/* Pagination Styling */
+.pagination {
+  gap: 0.5rem;
+}
+
+.page-link {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: #000;
+  background: #f8f9fa;
+  transition: all 0.3s ease;
+}
+
+.page-link:hover {
+  background: #000;
+  color: #fff;
+}
+
+.page-item.active .page-link {
+  background: #000;
+  color: #fff;
+}
+
+/* Product Carousel Enhancement */
+.carousel {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  padding: 1rem;
+  backdrop-filter: blur(5px);
+}
+
+/* Container padding for better spacing */
+.container {
+  padding: 0 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modern-title {
+    font-size: 2rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
 }

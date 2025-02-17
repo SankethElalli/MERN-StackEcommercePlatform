@@ -21,6 +21,18 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    isSeller: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    seller: {
+      name: String,
+      description: String,
+      logo: String,
+      rating: { type: Number, default: 0 },
+      numReviews: { type: Number, default: 0 },
+    },
   },
   {
     timestamps: true,

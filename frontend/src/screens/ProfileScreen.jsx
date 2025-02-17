@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Form, Button, Row, Col } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { useProfileMutation } from '../slices/usersApiSlice';
-import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
 import { setCredentials } from '../slices/authSlice';
-import { Link } from 'react-router-dom';
-import '../assets/styles/custom.css';
 
 const ProfileScreen = () => {
   const [name, setName] = useState('');
@@ -18,144 +13,96 @@ const ProfileScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { userInfo } = useSelector((state) => state.auth);
-
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
-
-  const [updateProfile, { isLoading: loadingUpdateProfile }] =
-    useProfileMutation();
+  const [updateProfile, { isLoading: loadingUpdateProfile }] = useProfileMutation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setName(userInfo.name);
-    setEmail(userInfo.email);
-  }, [userInfo.email, userInfo.name]);
+    if (userInfo) {
+      setName(userInfo.name);
+      setEmail(userInfo.email);
+    }
+  }, [userInfo]);
 
-  const dispatch = useDispatch();
   const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
-    } else {
-      try {
-        const res = await updateProfile({
-          name,
-          email,
-          password,
-        }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        toast.success('Profile updated successfully');
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
-      }
+      return;
+    }
+    try {
+      const res = await updateProfile({
+        name,
+        email,
+        password,
+      }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      toast.success('Profile updated successfully');
+      setPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
     }
   };
 
   return (
-    <Row>
-      <Col md={3}>
-        <h2 className='animated-title'>User Profile</h2>
-
-        <Form onSubmit={submitHandler} className='animated-form'>
-          <Form.Group className='my-2' controlId='name'>
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type='text'
-              placeholder='Enter name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className='my-2' controlId='email'>
-            <Form.Label>Email Address</Form.Label>
-            <Form.Control
-              type='email'
-              placeholder='Enter email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className='my-2' controlId='password'>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type='password'
-              placeholder='Enter password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Form.Group className='my-2' controlId='confirmPassword'>
-            <Form.Label>Confirm Password</Form.Label>
-            <Form.Control
-              type='password'
-              placeholder='Confirm password'
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></Form.Control>
-          </Form.Group>
-
-          <Button type='submit' variant='primary' className='animated-button'>
-            Update
-          </Button>
+    <Row className='justify-content-center'>
+      <Col md={6}>
+        <Card className='p-4 shadow-sm'>
+          <h2 className='text-center mb-4'>Update Profile</h2>
           {loadingUpdateProfile && <Loader />}
-        </Form>
-      </Col>
-      <Col md={9}>
-        <h2 className='animated-title'>My Orders</h2>
-        {isLoading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant='danger'>
-            {error?.data?.message || error.error}
-          </Message>
-        ) : (
-          <Table striped hover responsive className='table-sm animated-table'>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((order) => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice}</td>
-                  <td>
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: 'red' }} />
-                    )}
-                  </td>
-                  <td>
-                    <Button
-                      as={Link}
-                      to={`/order/${order._id}`}
-                      className='btn-sm animated-button'
-                      variant='light'
-                    >
-                      Details
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
+
+          <Form onSubmit={submitHandler}>
+            <Form.Group controlId='name' className='mb-3'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter name'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className='rounded-pill'
+              />
+            </Form.Group>
+
+            <Form.Group controlId='email' className='mb-3'>
+              <Form.Label>Email Address</Form.Label>
+              <Form.Control
+                type='email'
+                placeholder='Enter email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className='rounded-pill'
+              />
+            </Form.Group>
+
+            <Form.Group controlId='password' className='mb-3'>
+              <Form.Label>New Password</Form.Label>
+              <Form.Control
+                type='password'
+                placeholder='Enter new password'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className='rounded-pill'
+              />
+            </Form.Group>
+
+            <Form.Group controlId='confirmPassword' className='mb-4'>
+              <Form.Label>Confirm New Password</Form.Label>
+              <Form.Control
+                type='password'
+                placeholder='Confirm new password'
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className='rounded-pill'
+              />
+            </Form.Group>
+
+            <div className='d-grid'>
+              <Button type='submit' variant='dark' className='rounded-pill'>
+                Update Profile
+              </Button>
+            </div>
+          </Form>
+        </Card>
       </Col>
     </Row>
   );

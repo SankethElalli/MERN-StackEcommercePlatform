@@ -16,6 +16,7 @@ import {
 import { HelmetProvider } from 'react-helmet-async';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
+import SellerRoute from './components/SellerRoute';
 import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
@@ -32,13 +33,19 @@ import ProductEditScreen from './screens/admin/ProductEditScreen';
 import UserListScreen from './screens/admin/UserListScreen';
 import UserEditScreen from './screens/admin/UserEditScreen';
 import MyOrdersScreen from './screens/MyOrdersScreen';
+import SellerDashboardScreen from './screens/seller/SellerDashboardScreen';
+import SellerProductListScreen from './screens/seller/SellerProductListScreen';
+import SellerProductEditScreen from './screens/seller/SellerProductEditScreen';
+import SellerOrderListScreen from './screens/seller/SellerOrderListScreen';
+import SellerProfileScreen from './screens/seller/SellerProfileScreen';
 import store from './store';
 import { Provider } from 'react-redux';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<App />}>
+    <Route path='/' element={<App />} errorElement={<ErrorBoundary />}>
       <Route index={true} path='/' element={<HomeScreen />} />
       <Route path='/search/:keyword' element={<HomeScreen />} />
       <Route path='/page/:pageNumber' element={<HomeScreen />} />
@@ -70,6 +77,21 @@ const router = createBrowserRouter(
         <Route path='/admin/userlist' element={<UserListScreen />} />
         <Route path='/admin/product/:id/edit' element={<ProductEditScreen />} />
         <Route path='/admin/user/:id/edit' element={<UserEditScreen />} />
+      </Route>
+      {/* Seller Routes */}
+      <Route path='' element={<SellerRoute />}>
+        <Route path='/seller/dashboard' element={<SellerDashboardScreen />} />
+        <Route path='/seller/products' element={<SellerProductListScreen />} />
+        <Route 
+          path='/seller/orders' 
+          element={<SellerOrderListScreen />} 
+          errorElement={<ErrorBoundary />} 
+        />
+        <Route 
+          path='/seller/product/:id/edit' 
+          element={<SellerProductEditScreen />} 
+        />
+        <Route path='/seller/profile' element={<SellerProfileScreen />} />
       </Route>
     </Route>
   )

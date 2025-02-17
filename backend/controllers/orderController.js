@@ -20,17 +20,21 @@ const addOrderItems = asyncHandler(async (req, res) => {
     _id: { $in: orderItems.map((x) => x._id) },
   });
 
-  const dbOrderItems = orderItems.map((itemFromClient) => {
-    const matchingItemFromDB = itemsFromDB.find(
-      (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
-    );
-    return {
-      ...itemFromClient,
-      product: itemFromClient._id,
-      price: matchingItemFromDB.price,
-      _id: undefined,
-    };
-  });
+  const dbOrderItems = await Promise.all(
+    orderItems.map(async (itemFromClient) => {
+      const matchingItemFromDB = itemsFromDB.find(
+        (itemFromDB) => itemFromDB._id.toString() === itemFromClient._id
+      );
+      const product = await Product.findById(itemFromClient._id);
+      return {
+        ...itemFromClient,
+        product: itemFromClient._id,
+        price: matchingItemFromDB.price,
+        seller: product.seller, // Add seller reference from product
+        _id: undefined,
+      };
+    })
+  );
 
   // Calculate prices
   const { itemsPrice, taxPrice, shippingPrice, totalPrice } = calcPrices(dbOrderItems);
@@ -136,17 +140,26 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update order to delivered
-// @route   GET /api/orders/:id/deliver
-// @access  Private/Admin
+// @route   PUT /api/orders/:id/deliver
+// @access  Private/Seller or Admin
 const updateOrderToDelivered = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
+    // Check if user is seller of any items in order or is admin
+    const isSellerOfOrder = order.orderItems.some(
+      item => item.seller.toString() === req.user._id.toString()
+    );
+
+    if (!req.user.isAdmin && !isSellerOfOrder) {
+      res.status(403);
+      throw new Error('Not authorized to mark this order as delivered');
+    }
+
     order.isDelivered = true;
     order.deliveredAt = Date.now();
 
     const updatedOrder = await order.save();
-
     res.json(updatedOrder);
   } else {
     res.status(404);

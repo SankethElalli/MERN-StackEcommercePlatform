@@ -4,46 +4,76 @@ import multer from 'multer';
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
+// Separate storage configurations for products and logos
+const productStorage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, 'uploads/products/');
   },
   filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    );
+    cb(null, `product-${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
-function fileFilter(req, file, cb) {
-  const filetypes = /jpe?g|png|webp/;
-  const mimetypes = /image\/jpe?g|image\/png|image\/webp/;
+const logoStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/logos/');
+  },
+  filename(req, file, cb) {
+    cb(null, `logo-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
 
+// Check file type helper
+function checkFileType(file, cb) {
+  const filetypes = /jpg|jpeg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = mimetypes.test(file.mimetype);
+  const mimetype = filetypes.test(file.mimetype);
 
   if (extname && mimetype) {
-    cb(null, true);
+    return cb(null, true);
   } else {
-    cb(new Error('Images only!'), false);
+    cb('Images only!');
   }
 }
 
-const upload = multer({ storage, fileFilter });
-const uploadSingleImage = upload.single('image');
+// Setup multer for products
+const uploadProduct = multer({
+  storage: productStorage,
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
 
-router.post('/', (req, res) => {
-  uploadSingleImage(req, res, function (err) {
-    if (err) {
-      return res.status(400).send({ message: err.message });
-    }
+// Setup multer for logos
+const uploadLogo = multer({
+  storage: logoStorage,
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
 
-    res.status(200).send({
-      message: 'Image uploaded successfully',
-      image: `/${req.file.path}`,
+// Product image upload route
+router.post('/product', uploadProduct.single('image'), (req, res) => {
+  if (req.file) {
+    res.json({
+      message: 'Product image uploaded',
+      image: `/uploads/products/${req.file.filename}`,
     });
-  });
+  } else {
+    res.status(400).json({ message: 'No image file provided' });
+  }
+});
+
+// Logo upload route
+router.post('/logo', uploadLogo.single('image'), (req, res) => {
+  if (req.file) {
+    res.json({
+      message: 'Logo uploaded',
+      image: `/uploads/logos/${req.file.filename}`,
+    });
+  } else {
+    res.status(400).json({ message: 'No image file provided' });
+  }
 });
 
 export default router;

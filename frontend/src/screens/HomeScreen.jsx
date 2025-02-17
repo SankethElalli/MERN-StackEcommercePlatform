@@ -1,7 +1,6 @@
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { useGetProductsQuery } from '../slices/productsApiSlice';
-import { Link } from 'react-router-dom';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -15,55 +14,45 @@ const HomeScreen = () => {
   const { data, isLoading, error } = useGetProductsQuery({ keyword, pageNumber });
 
   return (
-    <div className='home-container fade-in'>
+    <>
+      <Meta />
       {!keyword ? (
-        <div className='hero-section'>
-          <ProductCarousel />
+        <ProductCarousel />
+      ) : null}
+
+      <Container>
+        <div className='section-header text-center my-5'>
+          <h1 className='modern-title no-after'>Featured Collection</h1>
         </div>
-      ) : (
-        <Link to='/' className='modern-button btn-light mb-4'>
-          Go Back
-        </Link>
-      )}
-      
-      <div className='products-section'>
+
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant='danger'>{error?.data?.message || error.error}</Message>
+          <Message variant='danger'>
+            {error?.data?.message || error.error}
+          </Message>
         ) : (
           <>
-            <Meta />
-            <div className='section-header'>
-              <h1 className='modern-title text-center'>Latest Products</h1>
-            </div>
-            <Row className='product-grid'>
+            <Row>
               {data.products.map((product) => (
-                <Col 
-                  key={product._id} 
-                  sm={12} 
-                  md={6} 
-                  lg={4} 
-                  xl={3} 
-                  className='mb-4 product-column'
-                >
-                  <div className='product-wrapper'>
+                <Col key={product._id} sm={12} md={6} lg={4} xl={3} className='mb-4'>
+                  <div className='product-card-wrapper h-100'>
                     <Product product={product} />
                   </div>
                 </Col>
               ))}
             </Row>
-            <div className='pagination-wrapper mt-4'>
-              <Paginate
-                pages={data.pages}
-                page={data.page}
+            <div className='d-flex justify-content-center mt-4'>
+              <Paginate 
+                pages={data.pages} 
+                page={data.page} 
                 keyword={keyword ? keyword : ''}
               />
             </div>
           </>
         )}
-      </div>
-    </div>
+      </Container>
+    </>
   );
 };
 

@@ -18,6 +18,8 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isSeller: user.isSeller,
+      seller: user.seller,
     });
   } else {
     res.status(401);
@@ -29,7 +31,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, isSeller, seller } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -42,6 +44,12 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    isSeller: isSeller || false,
+    seller: isSeller ? {
+      name: seller.name,
+      description: seller.description,
+      logo: seller.logo || '',
+    } : undefined,
   });
 
   if (user) {
@@ -52,6 +60,8 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isSeller: user.isSeller,
+      seller: user.seller,
     });
   } else {
     res.status(400);
@@ -79,6 +89,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isSeller: user.isSeller,
+      seller: user.seller,
     });
   } else {
     res.status(404);

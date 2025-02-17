@@ -19,25 +19,45 @@ const getProducts = asyncHandler(async (req, res) => {
 
   const count = await Product.countDocuments({ ...keyword });
   const products = await Product.find({ ...keyword })
+    .populate('seller', 'seller.name seller.logo seller.description')
     .limit(pageSize)
     .skip(pageSize * (page - 1));
 
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  // Transform the products to include seller info in the correct format
+  const transformedProducts = products.map(product => {
+    const productObj = product.toObject();
+    if (productObj.seller && productObj.seller.seller) {
+      productObj.seller = {
+        name: productObj.seller.seller.name,
+        logo: productObj.seller.seller.logo,
+        description: productObj.seller.seller.description
+      };
+    }
+    return productObj;
+  });
+
+  res.json({ products: transformedProducts, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product
 // @route   GET /api/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req, res) => {
-  // NOTE: checking for valid ObjectId to prevent CastError moved to separate
-  // middleware. See README for more info.
+  const product = await Product.findById(req.params.id)
+    .populate('seller', 'seller.name seller.logo seller.description');
 
-  const product = await Product.findById(req.params.id);
   if (product) {
-    return res.json(product);
+    // Transform the product to include seller info in the correct format
+    const transformedProduct = product.toObject();
+    if (transformedProduct.seller && transformedProduct.seller.seller) {
+      transformedProduct.seller = {
+        name: transformedProduct.seller.seller.name,
+        logo: transformedProduct.seller.seller.logo,
+        description: transformedProduct.seller.seller.description
+      };
+    }
+    return res.json(transformedProduct);
   } else {
-    // NOTE: this will run if a valid ObjectId but no product was found
-    // i.e. product may be null
     res.status(404);
     throw new Error('Product not found');
   }
@@ -51,6 +71,7 @@ const createProduct = asyncHandler(async (req, res) => {
     name: 'Sample name',
     price: 0,
     user: req.user._id,
+    seller: req.user._id, 
     image: '/images/sample.jpg',
     brand: 'Sample brand',
     category: 'Sample category',
@@ -73,16 +94,21 @@ const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    product.image = image;
-    product.brand = brand;
-    product.category = category;
-    product.countInStock = countInStock;
+    if ((req.user.isSeller && product.seller.equals(req.user._id)) || req.user.isAdmin) {
+      product.name = name;
+      product.price = price;
+      product.description = description;
+      product.image = image;
+      product.brand = brand;
+      product.category = category;
+      product.countInStock = countInStock;
 
-    const updatedProduct = await product.save();
-    res.json(updatedProduct);
+      const updatedProduct = await product.save();
+      res.json(updatedProduct);
+    } else {
+      res.status(403);
+      throw new Error('Not authorized to update this product');
+    }
   } else {
     res.status(404);
     throw new Error('Product not found');
@@ -151,7 +177,20 @@ const createProductReview = asyncHandler(async (req, res) => {
 const getTopProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({}).sort({ rating: -1 }).limit(3);
 
-  res.json(products);
+  // Transform the products to include seller info in the correct format
+  const transformedProducts = products.map(product => {
+    const productObj = product.toObject();
+    if (productObj.seller && productObj.seller.seller) {
+      productObj.seller = {
+        name: productObj.seller.seller.name,
+        logo: productObj.seller.seller.logo,
+        description: productObj.seller.seller.description
+      };
+    }
+    return productObj;
+  });
+
+  res.json(transformedProducts);
 });
 
 export {

@@ -37,4 +37,24 @@ const admin = (req, res, next) => {
   }
 };
 
-export { protect, admin };
+// Seller or Admin middleware
+const sellerOrAdmin = (req, res, next) => {
+  if ((req.user && req.user.isSeller) || (req.user && req.user.isAdmin)) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error('Not authorized as a seller or admin');
+  }
+};
+
+// Only seller middleware
+const seller = (req, res, next) => {
+  if (req.user && req.user.isSeller) {
+    next();
+  } else {
+    res.status(401);
+    throw new Error('Not authorized as a seller');
+  }
+};
+
+export { protect, admin, sellerOrAdmin, seller };

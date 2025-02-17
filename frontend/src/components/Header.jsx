@@ -12,6 +12,8 @@ const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
 
+  console.log('User Info:', userInfo); // Add this for debugging
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -78,6 +80,24 @@ const Header = () => {
                   </NavDropdown.Item>
                   <NavDropdown.Item as={Link} to='/admin/userlist'>
                     Users
+                  </NavDropdown.Item>
+                </NavDropdown>
+              )}
+
+              {/* Seller Links */}
+              {userInfo && userInfo.isSeller && (
+                <NavDropdown title='Seller' id='sellermenu'>
+                  <NavDropdown.Item as={Link} to='/seller/dashboard'>
+                    Dashboard
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/seller/products'>
+                    Products
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/seller/orders'>
+                    Orders
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/seller/profile'>
+                    Settings
                   </NavDropdown.Item>
                 </NavDropdown>
               )}

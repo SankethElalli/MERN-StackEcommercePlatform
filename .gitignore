@@ -29,3 +29,10 @@ uploads/*jpg
 
 # API tests
 http
+
+# Keep uploads directory structure but ignore contents
+uploads/products/*
+!uploads/products/.gitkeep
+
+uploads/logos/*
+!uploads/logos/.gitkeep

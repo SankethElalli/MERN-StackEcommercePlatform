@@ -14,6 +14,9 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSeller, setIsSeller] = useState(false); // Add this
+  const [sellerName, setSellerName] = useState(''); // Add this
+  const [sellerDescription, setSellerDescription] = useState(''); // Add this
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,7 +42,16 @@ const RegisterScreen = () => {
       toast.error('Passwords do not match');
     } else {
       try {
-        const res = await register({ name, email, password }).unwrap();
+        const res = await register({
+          name,
+          email,
+          password,
+          isSeller,
+          seller: isSeller ? {
+            name: sellerName,
+            description: sellerDescription,
+          } : undefined,
+        }).unwrap();
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
       } catch (err) {
@@ -90,6 +102,40 @@ const RegisterScreen = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
+
+        <Form.Group controlId='isSeller' className='my-2'>
+          <Form.Check
+            type='checkbox'
+            label='Register as Seller'
+            checked={isSeller}
+            onChange={(e) => setIsSeller(e.target.checked)}
+          />
+        </Form.Group>
+
+        {isSeller && (
+          <>
+            <Form.Group controlId='sellerName' className='my-2'>
+              <Form.Label>Store Name</Form.Label>
+              <Form.Control
+                type='text'
+                placeholder='Enter store name'
+                value={sellerName}
+                onChange={(e) => setSellerName(e.target.value)}
+              />
+            </Form.Group>
+
+            <Form.Group controlId='sellerDescription' className='my-2'>
+              <Form.Label>Store Description</Form.Label>
+              <Form.Control
+                as='textarea'
+                rows={3}
+                placeholder='Enter store description'
+                value={sellerDescription}
+                onChange={(e) => setSellerDescription(e.target.value)}
+              />
+            </Form.Group>
+          </>
+        )}
 
         <Button
           disabled={isLoading}

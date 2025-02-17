@@ -64,11 +64,31 @@ const productSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Add this middleware to always populate seller
+productSchema.pre('find', function() {
+  this.populate({
+    path: 'seller',
+    select: 'seller.name seller.logo seller.description'
+  });
+});
+
+productSchema.pre('findOne', function() {
+  this.populate({
+    path: 'seller',
+    select: 'seller.name seller.logo seller.description'
+  });
+});
 
 const Product = mongoose.model('Product', productSchema);
 

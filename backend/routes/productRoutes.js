@@ -9,16 +9,21 @@ import {
   createProductReview,
   getTopProducts,
 } from '../controllers/productController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
+import { protect, admin, sellerOrAdmin } from '../middleware/authMiddleware.js';
 import checkObjectId from '../middleware/checkObjectId.js';
 
-router.route('/').get(getProducts).post(protect, admin, createProduct);
-router.route('/:id/reviews').post(protect, checkObjectId, createProductReview);
+// Change admin to sellerOrAdmin for routes that sellers should access
+router.route('/')
+  .get(getProducts)
+  .post(protect, sellerOrAdmin, createProduct);
+
 router.get('/top', getTopProducts);
-router
-  .route('/:id')
+
+router.route('/:id')
   .get(checkObjectId, getProductById)
-  .put(protect, admin, checkObjectId, updateProduct)
-  .delete(protect, admin, checkObjectId, deleteProduct);
+  .put(protect, sellerOrAdmin, checkObjectId, updateProduct)
+  .delete(protect, sellerOrAdmin, checkObjectId, deleteProduct);
+
+router.route('/:id/reviews').post(protect, checkObjectId, createProductReview);
 
 export default router;
