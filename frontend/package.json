@@ -1,7 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/package",
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "westernstreet-frontend",
+  "version": "2.0.0",
   "private": true,
   "proxy": "http://localhost:5001",
   "dependencies": {
