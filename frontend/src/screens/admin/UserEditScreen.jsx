@@ -50,7 +50,7 @@ const UserEditScreen = () => {
 
   return (
     <>
-      <Link to='/admin/userlist' className='btn btn-light my-3 animated-button'>
+      <Link to='/admin/userlist' className='btn btn-dark my-3 animated-button'>
         Go Back
       </Link>
       <FormContainer>

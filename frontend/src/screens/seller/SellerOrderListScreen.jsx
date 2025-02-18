@@ -72,7 +72,7 @@ const SellerOrderListScreen = () => {
                   <div className='d-flex align-items-center gap-2'>
                     <Link 
                       to={`/order/${order._id}`} 
-                      className='btn btn-light btn-sm'
+                      className='btn btn-dark btn-sm'
                       title="View Details"
                     >
                       <FaEye />

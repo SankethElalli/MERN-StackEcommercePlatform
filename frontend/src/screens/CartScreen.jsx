@@ -71,7 +71,7 @@ const CartScreen = () => {
                   <Col md={2}>
                     <Button
                       type='button'
-                      variant='light'
+                      variant='dark'
                       onClick={() => removeFromCartHandler(item._id)}
                     >
                       <FaTrash />

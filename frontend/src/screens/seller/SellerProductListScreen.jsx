@@ -80,7 +80,7 @@ const SellerProductListScreen = () => {
                 <td>{product.brand}</td>
                 <td>
                   <Link to={`/seller/product/${product._id}/edit`}>
-                    <Button variant='light' className='btn-sm mx-2'>
+                    <Button variant='dark' className='btn-sm mx-2'>
                       <FaEdit />
                     </Button>
                   </Link>

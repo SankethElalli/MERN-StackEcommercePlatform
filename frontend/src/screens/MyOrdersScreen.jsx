@@ -31,7 +31,7 @@ const MyOrdersScreen = () => {
       ) : (
         <div className='table-responsive'>
           <Table hover striped className='table-sm'>
-            <thead className='bg-light'>
+            <thead className='bg-dark'>
               <tr>
                 <th>ORDER ID</th>
                 <th>DATE</th>

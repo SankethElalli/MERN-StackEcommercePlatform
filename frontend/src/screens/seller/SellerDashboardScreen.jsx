@@ -93,7 +93,7 @@ const SellerDashboardScreen = () => {
                           <td>
                             <Link 
                               to={`/order/${order._id}`}
-                              className='btn btn-light btn-sm'
+                              className='btn btn-dark btn-sm'
                             >
                               Details
                             </Link>
