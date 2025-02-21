@@ -1,26 +1,24 @@
 import { Row, Col, Container } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
-import { useGetProductsQuery, useGetActiveVideoBannerQuery } from '../slices/productsApiSlice';
+import { useGetProductsQuery } from '../slices/productsApiSlice';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 import Meta from '../components/Meta';
-import VideoBanner from '../components/VideoBanner';
+import '../assets/styles/custom.css';
 
 const HomeScreen = () => {
   const { pageNumber, keyword } = useParams();
   const { data, isLoading, error } = useGetProductsQuery({ keyword, pageNumber });
-  const { data: banner } = useGetActiveVideoBannerQuery(); // Remove unused bannerLoading
-
-  console.log('Banner data:', banner); // Debug log
 
   return (
     <>
       <Meta />
-      {!keyword && banner && banner.videoUrl && (
-        <VideoBanner videoUrl={banner.videoUrl} />
-      )}
+      {!keyword ? (
+        <ProductCarousel />
+      ) : null}
 
       <Container>
         <div className='section-header text-center my-5'>
