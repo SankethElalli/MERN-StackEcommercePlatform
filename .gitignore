@@ -36,6 +36,3 @@ uploads/products/*
 
 uploads/logos/*
 !uploads/logos/.gitkeep
-
-uploads/videos/*
-!uploads/videos/.gitkeep
