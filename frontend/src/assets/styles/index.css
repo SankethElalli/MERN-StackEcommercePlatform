@@ -79,3 +79,120 @@ table th {
   color: #007bff;
   font-weight: bold;
 }
+
+.home-banner-video {
+  width: 100%;
+  height: 85vh; /* Increased from 60vh to 85vh */
+  object-fit: cover;
+  margin-bottom: 4rem; /* Increased from 2rem to 4rem */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.home-banner-video.loaded {
+  opacity: 1;
+}
+
+/* Add loading placeholder */
+.home-banner-video:not(:defined) {
+  background: #f0f0f0;
+  min-height: 400px;
+}
+
+/* Optimize video loading */
+.home-banner-video {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+}
+
+.video-banner {
+  position: relative;
+  width: 100%;
+  height: 85vh; /* Increased to match video height */
+  overflow: hidden;
+  background: #000;
+}
+
+/* Add loading state */
+.video-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  z-index: -1;
+}
+
+/* Optimize performance */
+.video-banner video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.section-header {
+  margin: 5rem auto 4rem auto !important; /* Increased top and bottom margins */
+}
+
+.modern-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.video-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .home-banner-video,
+  .video-banner {
+    height: 70vh;
+  }
+  
+  .section-header {
+    margin: 3rem auto 2rem auto !important;
+  }
+  
+  .modern-title {
+    font-size: 2rem;
+  }
+}
