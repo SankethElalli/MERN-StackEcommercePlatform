@@ -38,6 +38,9 @@ import SellerProductListScreen from './screens/seller/SellerProductListScreen';
 import SellerProductEditScreen from './screens/seller/SellerProductEditScreen';
 import SellerOrderListScreen from './screens/seller/SellerOrderListScreen';
 import SellerProfileScreen from './screens/seller/SellerProfileScreen';
+import VideoBannerEditScreen from './screens/admin/VideoBannerEditScreen';
+import VideoBannerListScreen from './screens/admin/VideoBannerListScreen';
+import VideoBannerUploadScreen from './screens/admin/VideoBannerUploadScreen';
 import store from './store';
 import { Provider } from 'react-redux';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -77,6 +80,9 @@ const router = createBrowserRouter(
         <Route path='/admin/userlist' element={<UserListScreen />} />
         <Route path='/admin/product/:id/edit' element={<ProductEditScreen />} />
         <Route path='/admin/user/:id/edit' element={<UserEditScreen />} />
+        <Route path='/admin/banner' element={<VideoBannerEditScreen />} />
+        <Route path='/admin/videobanners' element={<VideoBannerListScreen />} />
+        <Route path='/admin/videobanner/upload' element={<VideoBannerUploadScreen />} />
       </Route>
       {/* Seller Routes */}
       <Route path='' element={<SellerRoute />}>
