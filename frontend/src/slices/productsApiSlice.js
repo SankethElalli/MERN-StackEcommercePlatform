@@ -60,6 +60,12 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       query: () => `${PRODUCTS_URL}/top`,
       keepUnusedDataFor: 5,
     }),
+    getActiveVideoBanner: builder.query({
+      query: () => ({
+        url: '/api/videobanners/active',
+      }),
+      keepUnusedDataFor: 30,
+    }),
   }),
 });
 
@@ -72,4 +78,5 @@ export const {
   useDeleteProductMutation,
   useCreateReviewMutation,
   useGetTopProductsQuery,
+  useGetActiveVideoBannerQuery,
 } = productsApiSlice;
