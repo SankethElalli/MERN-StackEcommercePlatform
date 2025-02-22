@@ -15,7 +15,7 @@
 
 * [Bug Fixes, corrections and code FAQ](#bug-fixes-corrections-and-code-faq)
   - [BUG: Warnings on ProfileScreen](#bug-warnings-on-profilescreen)
-  - [BUG: Changing an uncontrolled input to be controlled](#bug-changing-an-uncontrolled-input-to-be-controlled)
+ 
   - [BUG: All file types are allowed when updating product images](#bug-all-file-types-are-allowed-when-updating-product-images)
   - [BUG: Throwing error from productControllers will not give a custom error response](#bug-throwing-error-from-productcontrollers-will-not-give-a-custom-error-response)
     - [Original code](#original-code)
