@@ -120,12 +120,20 @@ app.get('/api/config/paypal', (req, res) =>
 );
 
 if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the React frontend app
   const frontendBuildPath = path.join(__dirname, '../frontend/build');
+  
+  // Serve static files
   app.use(express.static(frontendBuildPath));
   
-  app.get('*', (req, res) =>
-    res.sendFile(path.resolve(frontendBuildPath, 'index.html'))
-  );
+  // Handle React routing, return all requests to React app
+  app.get('*', (req, res, next) => {
+    if (req.url.startsWith('/api/')) {
+      // Skip for API routes
+      return next();
+    }
+    res.sendFile(path.join(frontendBuildPath, 'index.html'));
+  });
 } else {
   app.get('/', (req, res) => {
     res.send('API is running....');
