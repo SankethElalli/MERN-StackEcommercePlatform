@@ -3,14 +3,11 @@
   "version": "2.0.0",
   "type": "module",
   "description": "Multi-vendor marketplace built with the MERN stack",
-  "main": "backend/server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node backend/server.js",
-    "server": "nodemon backend/server.js",
     "build": "cd frontend && npm install && npm run build",
-    "install-client": "cd frontend && npm install",
-    "heroku-postbuild": "npm run install-client && npm run build",
-    "vercel-build": "npm run install-client && npm run build"
+    "vercel-build": "npm install && npm run build"
   },
   "author": "souravbudke",
   "license": "MIT",
