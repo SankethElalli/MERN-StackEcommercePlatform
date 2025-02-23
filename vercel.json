@@ -6,16 +6,12 @@
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build",
-        "buildCommand": "cd ../frontend && npm install && npm run build",
-        "nodeVersion": "18.x"
+        "buildCommand": "cd ../frontend && npm install && npm run build"
       }
     },
     {
       "src": "backend/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "nodeVersion": "18.x"
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
