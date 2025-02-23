@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
 dotenv.config();
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
@@ -14,13 +15,14 @@ import sellerRoutes from './routes/sellerRoutes.js';
 import videoBannerRoutes from './routes/videoBannerRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const port = process.env.PORT || 5001;
 
 connectDB();
 
 const app = express();
-
-const __dirname = path.resolve();
 
 // Optimized video streaming route
 app.get('/uploads/videos/:filename', (req, res) => {
@@ -118,10 +120,11 @@ app.get('/api/config/paypal', (req, res) =>
 );
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/frontend/build')));
-
+  const frontendBuildPath = path.join(__dirname, '../frontend/build');
+  app.use(express.static(frontendBuildPath));
+  
   app.get('*', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+    res.sendFile(path.resolve(frontendBuildPath, 'index.html'))
   );
 } else {
   app.get('/', (req, res) => {
