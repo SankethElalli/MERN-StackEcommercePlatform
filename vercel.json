@@ -2,39 +2,49 @@
   "version": 2,
   "builds": [
     {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build",
+        "buildCommand": "cd ../frontend && npm install && npm run build"
+      }
+    },
+    {
       "src": "backend/server.js",
       "use": "@vercel/node"
     }
   ],
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/build",
-  "framework": "create-react-app",
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "backend/server.js"
+      "dest": "/backend/server.js"
     },
     {
       "src": "/uploads/(.*)",
-      "dest": "backend/server.js"
+      "dest": "/backend/server.js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/frontend/build/static/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/frontend/build/favicon.ico"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/frontend/build/manifest.json"
+    },
+    {
+      "src": "/logo(.*).png",
+      "dest": "/frontend/build/logo$1.png"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/backend/server.js"
-    },
-    {
-      "source": "/uploads/:path*",
-      "destination": "/backend/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/build/index.html"
+      "dest": "/frontend/build/index.html"
     }
   ]
 }
