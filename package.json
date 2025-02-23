@@ -11,8 +11,7 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder",
     "data:destroy": "node backend/seeder -d",
-    "build": "cd frontend && npm install && npm run build",
-    "vercel-build": "npm run build"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "souravbudke",
   "license": "MIT",
