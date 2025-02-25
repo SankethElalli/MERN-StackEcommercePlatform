@@ -3,7 +3,7 @@
   "name": "westernstreet-frontend",
   "version": "2.0.0",
   "private": true,
-  "proxy": "http://localhost:5001",
+  "proxy": "http://backend:5001",
   "dependencies": {
     "@paypal/react-paypal-js": "^7.8.2",
     "@reduxjs/toolkit": "^1.9.3",
@@ -12,6 +12,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "chalk": "^5.4.1",
+    "date-fns": "^2.28.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",

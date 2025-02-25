@@ -4,11 +4,23 @@ import { Link } from 'react-router-dom';
 import Rating from './Rating';
 import '../assets/styles/custom.css';
 
+// Default placeholder image
+const PLACEHOLDER_IMAGE = '/images/placeholder.jpg';
+
 const Product = ({ product }) => {
   return (
     <Card className='my-3 p-3 rounded animated-card'>
       <Link to={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant='top' className='product-image' />
+        <Card.Img 
+            src={product.image} 
+            variant='top' 
+            className='product-image' 
+            loading="lazy"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = PLACEHOLDER_IMAGE;
+            }}
+          />
       </Link>
       <Card.Body>
         {/* Seller Info with Debug */}

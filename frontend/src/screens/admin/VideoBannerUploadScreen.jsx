@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, ProgressBar } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import FormContainer from '../../components/FormContainer';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 // Remove Loader import since we're using ProgressBar instead
@@ -12,6 +13,23 @@ const VideoBannerUploadScreen = () => {
   const [progress, setProgress] = useState(0);
   const [videoUrl, setVideoUrl] = useState('');
   const navigate = useNavigate();
+
+  const { userInfo } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log('Current userInfo:', userInfo);
+    if (!userInfo) {
+      console.log('No user info found');
+      navigate('/login');
+      return;
+    }
+    if (!userInfo.isAdmin) {
+      console.log('User is not admin:', userInfo);
+      navigate('/login');
+      return;
+    }
+    console.log('User is admin, allowing access');
+  }, [userInfo, navigate]);
 
   const uploadFileHandler = async (e) => {
     const file = e.target.files[0];
@@ -36,36 +54,36 @@ const VideoBannerUploadScreen = () => {
     setProgress(0);
 
     try {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const xhr = new XMLHttpRequest();
+      if (!userInfo || !userInfo.isAdmin) {
+        toast.error('Please login as admin');
+        setUploading(false);
+        navigate('/login');
+        return;
+      }
 
-      xhr.open('POST', '/api/upload/video', true);
-      xhr.setRequestHeader('Authorization', `Bearer ${userInfo.token}`);
+      console.log('Starting upload with token:', userInfo.token);
 
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const percentage = (event.loaded / event.total) * 100;
+      const response = await axios.post('/api/upload/video', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+        withCredentials: true,
+        onUploadProgress: (progressEvent) => {
+          const percentage = (progressEvent.loaded / progressEvent.total) * 100;
           setProgress(Math.round(percentage));
-        }
-      };
+        },
+      });
 
-      xhr.onload = function() {
-        if (xhr.status === 200) {
-          const response = JSON.parse(xhr.responseText);
-          setVideoUrl(response.videoUrl);
-          toast.success('Upload successful!');
-        } else {
-          throw new Error(xhr.responseText);
-        }
-        setUploading(false);
-      };
+      console.log('Upload response:', response);
 
-      xhr.onerror = function() {
-        toast.error('Upload failed');
-        setUploading(false);
-      };
-
-      xhr.send(formData);
+      if (response.data && response.data.videoUrl) {
+        setVideoUrl(response.data.videoUrl);
+        toast.success('Video uploaded successfully');
+      } else {
+        throw new Error('Invalid response format');
+      }
+      setUploading(false);
     } catch (err) {
       toast.error(err.message || 'Upload failed');
       setUploading(false);

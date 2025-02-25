@@ -3,6 +3,9 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
+import cors from 'cors';
+import multer from 'multer';
+import { protect, admin } from './middleware/authMiddleware.js';
 dotenv.config();
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
@@ -18,6 +21,12 @@ const port = process.env.PORT || 5001;
 connectDB();
 
 const app = express();
+
+// CORS configuration
+app.use(cors({
+  origin: ['http://localhost:3000'],
+  credentials: true
+}));
 
 const __dirname = path.resolve();
 
@@ -72,17 +81,84 @@ app.get('/uploads/videos/:filename', (req, res) => {
   }
 });
 
-// Serve static files with absolute paths
+// Serve static files with optimized configuration
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
-  maxAge: '1h',
+  maxAge: '1d',
   etag: true,
-  lastModified: true
+  lastModified: true,
+  setHeaders: (res, path) => {
+    // Enable CORS for static files
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    
+    // Add caching headers
+    if (path.endsWith('.jpg') || path.endsWith('.jpeg') || path.endsWith('.png')) {
+      res.setHeader('Cache-Control', 'public, max-age=86400'); // 24 hours
+    } else if (path.endsWith('.mp4')) {
+      res.setHeader('Cache-Control', 'public, max-age=3600'); // 1 hour
+    }
+  }
 }));
-app.use('/videos', express.static(path.join(__dirname, 'uploads/videos')));
+
+// Handle 404 errors for static files
+app.use('/uploads/*', (req, res) => {
+  console.error(`File not found: ${req.path}`);
+  res.status(404).json({ message: 'File not found' });
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
+// Video upload route
+app.post('/api/upload/video', protect, admin, (req, res) => {
+  console.log('Video upload request received');
+  console.log('Headers:', req.headers);
+  const uploadVideo = multer({
+    storage: multer.diskStorage({
+      destination: (req, file, cb) => {
+        const dir = 'uploads/videos';
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
+      },
+      filename: (req, file, cb) => {
+        cb(null, `video-${Date.now()}${path.extname(file.originalname)}`);
+      },
+    }),
+    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
+    fileFilter: (req, file, cb) => {
+      const filetypes = /mp4|webm|mov/;
+      const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+      const mimetype = filetypes.test(file.mimetype);
+      if (extname && mimetype) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only video files are allowed!'));
+      }
+    },
+  }).single('video');
+
+  uploadVideo(req, res, (err) => {
+    if (err) {
+      res.status(400).json({ message: err.message });
+    } else if (!req.file) {
+      res.status(400).json({ message: 'Please upload a video file' });
+    } else {
+      res.json({
+        message: 'Video uploaded successfully',
+        videoUrl: `/${req.file.path.replace(/\\/g, '/')}`,
+      });
+    }
+  });
+});
 
 // Create required directories if they don't exist
 [
