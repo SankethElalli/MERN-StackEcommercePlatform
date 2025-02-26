@@ -69,6 +69,10 @@ const productSchema = mongoose.Schema(
       required: true,
       ref: 'User',
     },
+    sizes: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

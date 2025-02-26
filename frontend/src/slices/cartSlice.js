@@ -14,11 +14,14 @@ const cartSlice = createSlice({
       // in the cart
       const { user, rating, numReviews, reviews, ...item } = action.payload;
 
-      const existItem = state.cartItems.find((x) => x._id === item._id);
+      // Check if the item exists with the same ID AND size
+      const existItem = state.cartItems.find(
+        (x) => x._id === item._id && x.size === item.size
+      );
 
       if (existItem) {
         state.cartItems = state.cartItems.map((x) =>
-          x._id === existItem._id ? item : x
+          x._id === existItem._id && x.size === existItem.size ? item : x
         );
       } else {
         state.cartItems = [...state.cartItems, item];

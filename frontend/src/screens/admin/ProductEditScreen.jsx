@@ -22,6 +22,8 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
+  const [sizes, setSizes] = useState([]);
+  const [sizeInput, setSizeInput] = useState('');
 
   const {
     data: product,
@@ -50,6 +52,7 @@ const ProductEditScreen = () => {
         category,
         description,
         countInStock,
+        sizes,
       }).unwrap(); // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
       toast.success('Product updated');
       refetch();
@@ -68,6 +71,7 @@ const ProductEditScreen = () => {
       setCategory(product.category);
       setCountInStock(product.countInStock);
       setDescription(product.description);
+      setSizes(product.sizes || []);
     }
   }, [product]);
 
@@ -81,6 +85,17 @@ const ProductEditScreen = () => {
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
+  };
+
+  const addSize = () => {
+    if (sizeInput.trim() !== '' && !sizes.includes(sizeInput.trim())) {
+      setSizes([...sizes, sizeInput.trim()]);
+      setSizeInput('');
+    }
+  };
+
+  const removeSize = (sizeToRemove) => {
+    setSizes(sizes.filter(size => size !== sizeToRemove));
   };
 
   return (
@@ -163,14 +178,48 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId='description'>
+            <Form.Group controlId='description' className='my-2'>
               <Form.Label>Description</Form.Label>
               <Form.Control
-                type='text'
-                placeholder='Enter description'
+                as='textarea'
+                rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               ></Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId='sizes' className='my-2'>
+              <Form.Label>Sizes</Form.Label>
+              <div className='d-flex'>
+                <Form.Control
+                  type='text'
+                  placeholder='Enter size'
+                  value={sizeInput}
+                  onChange={(e) => setSizeInput(e.target.value)}
+                  className='me-2'
+                />
+                <Button 
+                  variant='outline-secondary' 
+                  onClick={addSize}
+                >
+                  Add
+                </Button>
+              </div>
+              {sizes.length > 0 && (
+                <div className='mt-2'>
+                  {sizes.map((size) => (
+                    <Button
+                      key={size}
+                      variant='light'
+                      size='sm'
+                      className='me-2 mb-2'
+                      onClick={() => removeSize(size)}
+                    >
+                      {size} &times;
+                    </Button>
+                  ))}
+                </div>
+              )}
             </Form.Group>
 
             <Button

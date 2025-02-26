@@ -60,6 +60,32 @@ const products = [
     numReviews: 10,
   },
   {
+    name: 'Classic Fit T-shirt',
+    image: '/images/6.jpg',
+    description:
+      'A comfortable cotton t-shirt with a classic fit. Perfect for everyday wear.',
+    brand: 'WesternStreet',
+    category: 'Clothing',
+    price: 19.99,
+    countInStock: 25,
+    rating: 4.2,
+    numReviews: 8,
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+  },
+  {
+    name: 'Slim Fit Jeans',
+    image: '/images/7.jpg',
+    description:
+      'Stylish slim fit jeans made from premium denim. Modern design with excellent comfort.',
+    brand: 'WesternStreet',
+    category: 'Clothing',
+    price: 49.99,
+    countInStock: 15,
+    rating: 4.7,
+    numReviews: 12,
+    sizes: ['28', '30', '32', '34', '36', '38'],
+  },
+  {
     name: 'Amazon Echo Dot 3rd Generation',
     image: '/images/6.jpg',
     description:

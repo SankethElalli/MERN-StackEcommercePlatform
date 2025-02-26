@@ -31,9 +31,14 @@ const ProductScreen = () => {
   const [qty, setQty] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
 
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
+    if (selectedSize === '' && product.sizes.length > 0) {
+      toast.error('Please select a size');
+      return;
+    }
+    dispatch(addToCart({ ...product, size: selectedSize, qty }));
     navigate('/cart');
   };
 
@@ -132,6 +137,27 @@ const ProductScreen = () => {
                     </Col>
                   </Row>
                 </ListGroup.Item>
+                {product.sizes && product.sizes.length > 0 && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Size</Col>
+                      <Col>
+                        <Form.Control
+                          as="select"
+                          value={selectedSize}
+                          onChange={(e) => setSelectedSize(e.target.value)}
+                        >
+                          <option value="">Select a size</option>
+                          {product.sizes.map((size) => (
+                            <option key={size} value={size}>
+                              {size}
+                            </option>
+                          ))}
+                        </Form.Control>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 {product.countInStock > 0 && (
                   <ListGroup.Item>
                     <Row>

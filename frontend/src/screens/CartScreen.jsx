@@ -51,6 +51,11 @@ const CartScreen = () => {
                   </Col>
                   <Col md={3}>
                     <Link to={`/product/${item._id}`}>{item.name}</Link>
+                    {item.size && (
+                      <div className="mt-1">
+                        <small className="text-muted">Size: {item.size}</small>
+                      </div>
+                    )}
                   </Col>
                   <Col md={2}>₹{item.price}</Col>
                   <Col md={2}>
