@@ -21,7 +21,20 @@ import products from './data/products.js';
 import User from './models/userModel.js';
 import Product from './models/productModel.js';
 import Order from './models/orderModel.js';
+import Category from './models/categoryModel.js';
 import connectDB from './config/db.js';
+
+// Sample categories
+const categories = [
+  { name: 'FOOTWEAR', value: 'footwear', path: '/category/footwear' },
+  { name: 'APPAREL', value: 'apparel', path: '/category/apparel' },
+  { name: 'LIFESTYLE', value: 'lifestyle', path: '/category/lifestyle' },
+  { name: 'VEGNNONVEG', value: 'vegnnonveg', path: '/category/vegnnonveg' },
+  { name: 'BRANDS', value: 'brands', path: '/category/brands' },
+  { name: 'SHOP THE LOOK', value: 'shop-the-look', path: '/category/shop-the-look' },
+  { name: 'VNV MAGAZINE', value: 'vnv-magazine', path: '/category/vnv-magazine' },
+  { name: 'MARKDOWNS', value: 'markdowns', path: '/category/markdowns' },
+];
 
 connectDB();
 
@@ -30,17 +43,20 @@ const importData = async () => {
     await Order.deleteMany();
     await Product.deleteMany();
     await User.deleteMany();
+    await Category.deleteMany();
 
     const createdUsers = await User.insertMany(users);
+    await Category.insertMany(categories);
 
     const adminUser = createdUsers[0]._id;
+    const sellerUser = createdUsers.find(user => user.isSeller)?._id || adminUser;
 
     const sampleProducts = products.map((product) => {
       return { 
         ...product, 
         user: adminUser,
-        // Remove the price replacement since price is already a number
-        category: product.category || 'Sample Category' // Set default category if none exists
+        seller: sellerUser, 
+        category: product.category || 'footwear' 
       };
     });
 
@@ -59,6 +75,7 @@ const destroyData = async () => {
     await Order.deleteMany();
     await Product.deleteMany();
     await User.deleteMany();
+    await Category.deleteMany();
 
     console.log('Data Destroyed!'.red.inverse);
     process.exit();

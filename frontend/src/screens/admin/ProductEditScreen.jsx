@@ -10,6 +10,7 @@ import {
   useUpdateProductMutation,
   useUploadProductImageMutation,
 } from '../../slices/productsApiSlice';
+import { useGetCategoriesQuery } from '../../slices/categoriesApiSlice';
 import '../../assets/styles/custom.css';
 
 const ProductEditScreen = () => {
@@ -37,6 +38,8 @@ const ProductEditScreen = () => {
 
   const [uploadProductImage, { isLoading: loadingUpload }] =
     useUploadProductImageMutation();
+
+  const { data: categories, isLoading: loadingCategories } = useGetCategoriesQuery();
 
   const navigate = useNavigate();
 
@@ -170,12 +173,18 @@ const ProductEditScreen = () => {
 
             <Form.Group controlId='category'>
               <Form.Label>Category</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter category'
+              <Form.Select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              ></Form.Control>
+              >
+                <option value=''>Select Category</option>
+                {categories && categories.map((cat) => (
+                  <option key={cat._id} value={cat.value}>
+                    {cat.name}
+                  </option>
+                ))}
+              </Form.Select>
+              {loadingCategories && <Loader />}
             </Form.Group>
 
             <Form.Group controlId='description' className='my-2'>
@@ -210,7 +219,7 @@ const ProductEditScreen = () => {
                   {sizes.map((size) => (
                     <Button
                       key={size}
-                      variant='light'
+                      variant='dark'
                       size='sm'
                       className='me-2 mb-2'
                       onClick={() => removeSize(size)}

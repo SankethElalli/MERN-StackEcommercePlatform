@@ -17,6 +17,17 @@ const users = [
     email: 'jane@email.com',
     password: bcrypt.hashSync('123456', 10),
   },
+  {
+    name: 'Seller User',
+    email: 'seller@email.com',
+    password: bcrypt.hashSync('123456', 10),
+    isSeller: true,
+    seller: {
+      name: 'WesternStreet',
+      logo: '/images/logo.png',
+      description: 'Official WesternStreet Store',
+    },
+  },
 ];
 
 export default users;

@@ -91,7 +91,7 @@ const ProductListScreen = () => {
                     <Button
                       as={Link}
                       to={`/admin/product/${product._id}/edit`}
-                      variant='light'
+                      variant='dark'
                       className='btn-sm mx-2 animated-button'
                     >
                       <FaEdit />

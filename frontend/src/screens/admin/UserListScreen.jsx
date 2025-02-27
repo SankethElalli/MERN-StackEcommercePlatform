@@ -69,7 +69,7 @@ const UserListScreen = () => {
                         as={Link}
                         to={`/admin/user/${user._id}/edit`}
                         style={{ marginRight: '10px' }}
-                        variant='light'
+                        variant='dark'
                         className='btn-sm animated-button'
                       >
                         <FaEdit />

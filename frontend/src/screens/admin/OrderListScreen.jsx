@@ -56,7 +56,7 @@ const OrderListScreen = () => {
                   <Button
                     as={Link}
                     to={`/order/${order._id}`}
-                    variant='light'
+                    variant='dark'
                     className='btn-sm animated-button'
                   >
                     Details

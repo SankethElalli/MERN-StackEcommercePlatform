@@ -10,6 +10,7 @@ import {
   useUpdateProductMutation,
   useUploadProductImageMutation,
 } from '../../slices/productsApiSlice';
+import { useGetCategoriesQuery } from '../../slices/categoriesApiSlice';
 
 const SellerProductEditScreen = () => {
   const { id: productId } = useParams();
@@ -27,6 +28,7 @@ const SellerProductEditScreen = () => {
   const { data: product, isLoading, error } = useGetProductDetailsQuery(productId);
   const [updateProduct, { isLoading: loadingUpdate }] = useUpdateProductMutation();
   const [uploadProductImage, { isLoading: loadingUpload }] = useUploadProductImageMutation();
+  const { data: categories, isLoading: loadingCategories } = useGetCategoriesQuery();
 
   const navigate = useNavigate();
 
@@ -172,12 +174,18 @@ const SellerProductEditScreen = () => {
 
             <Form.Group controlId='category' className='my-2'>
               <Form.Label>Category</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter category'
+              <Form.Select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              >
+                <option value=''>Select Category</option>
+                {categories && categories.map((cat) => (
+                  <option key={cat._id} value={cat.value}>
+                    {cat.name}
+                  </option>
+                ))}
+              </Form.Select>
+              {loadingCategories && <Loader />}
             </Form.Group>
 
             <Form.Group controlId='description' className='my-2'>

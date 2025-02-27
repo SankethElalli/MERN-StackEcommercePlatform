@@ -14,6 +14,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 import sellerRoutes from './routes/sellerRoutes.js';
 import videoBannerRoutes from './routes/videoBannerRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 const port = process.env.PORT || 5001;
@@ -179,6 +180,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/seller', sellerRoutes);
 app.use('/api/videobanners', videoBannerRoutes);  // Add this line
+app.use('/api/categories', categoryRoutes);  // Add category routes
 
 app.get('/api/config/paypal', (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
