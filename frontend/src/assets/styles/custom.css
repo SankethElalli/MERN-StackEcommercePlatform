@@ -647,4 +647,8 @@ body, p, h1, h2, h3, h4, h5, h6, a, span, div {
   .container {
     padding: 0 1rem;
   }
+  
+  .category-bar {
+    display: none;
+  }
 }
