@@ -7,13 +7,15 @@ import { logout } from '../slices/authSlice';
 import SearchBox from './SearchBox';
 import logo from '../assets/logo.png';
 import { resetCart } from '../slices/cartSlice';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useGetCategoriesQuery } from '../slices/categoriesApiSlice';
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
-  const [expanded, setExpanded] = useState(false);
+  const [expanded] = useState(false);  // Remove setExpanded since it's not used
   const [showDrawer, setShowDrawer] = useState(false);
+  const { data: categories } = useGetCategoriesQuery();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,6 +35,18 @@ const Header = () => {
 
   const closeDrawer = () => setShowDrawer(false);
 
+  // Add useEffect to handle screen resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {  // 768px is the typical breakpoint for mobile
+        setShowDrawer(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <header>
       <Navbar 
@@ -51,7 +65,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' onClick={() => setShowDrawer(true)} />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
-              <SearchBox />
+              <SearchBox onSearchComplete={() => setShowDrawer(false)} />
               <Link to='/cart' className='nav-link'>
                 <FaShoppingCart /> Cart
                 {cartItems.length > 0 && (
@@ -89,6 +103,9 @@ const Header = () => {
                   <NavDropdown.Item as={Link} to='/admin/categories'>
                     Categories
                   </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/admin/videobanners'>
+                    Video Banners
+                  </NavDropdown.Item>
                 </NavDropdown>
               )}
               {userInfo && userInfo.isSeller && (
@@ -99,6 +116,12 @@ const Header = () => {
                   <NavDropdown.Item as={Link} to='/seller/products'>
                     Products
                   </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/seller/orders'>
+                    Orders
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Link} to='/seller/profile'>
+                    Shop Details
+                  </NavDropdown.Item>
                 </NavDropdown>
               )}
             </Nav>
@@ -108,30 +131,81 @@ const Header = () => {
 
       <Offcanvas show={showDrawer} onHide={closeDrawer} placement='end'>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Menu</Offcanvas.Title>
+          <Offcanvas.Title>
+            {userInfo ? `Hello, ${userInfo.name}` : 'Menu'}
+          </Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <SearchBox />
           <Nav className='flex-column'>
-            <Link to='/cart' className='nav-link' onClick={closeDrawer}>
+            <SearchBox onSearchComplete={closeDrawer} />
+            
+            <Link to='/cart' className='nav-link mb-2' onClick={closeDrawer}>
               <FaShoppingCart /> Cart
+              {cartItems.length > 0 && (
+                <Badge pill bg='success' style={{ marginLeft: '5px' }}>
+                  {cartItems.reduce((a, c) => a + c.qty, 0)}
+                </Badge>
+              )}
             </Link>
+
             {userInfo ? (
-              <Link to='/profile' className='nav-link' onClick={closeDrawer}>
-                <FaUser /> Profile
-              </Link>
+              <>
+                <Link to='/profile' className='nav-link mb-2' onClick={closeDrawer}>
+                  <FaUser /> My Profile
+                </Link>
+                <Link to='/myorders' className='nav-link mb-2' onClick={closeDrawer}>
+                  My Orders
+                </Link>
+                {userInfo.isAdmin && (
+                  <div className="mb-2">
+                    <h6 className="px-3 mt-3 mb-2 text-muted">Admin</h6>
+                    <Link to='/admin/productlist' className='nav-link mb-1' onClick={closeDrawer}>Products</Link>
+                    <Link to='/admin/orderlist' className='nav-link mb-1' onClick={closeDrawer}>Orders</Link>
+                    <Link to='/admin/userlist' className='nav-link mb-1' onClick={closeDrawer}>Users</Link>
+                    <Link to='/admin/categories' className='nav-link mb-1' onClick={closeDrawer}>Categories</Link>
+                    <Link to='/admin/videobanners' className='nav-link mb-1' onClick={closeDrawer}>Video Banners</Link>
+                  </div>
+                )}
+                {userInfo.isSeller && (
+                  <div className="mb-2">
+                    <h6 className="px-3 mt-3 mb-2 text-muted">Seller</h6>
+                    <Link to='/seller/dashboard' className='nav-link mb-1' onClick={closeDrawer}>Dashboard</Link>
+                    <Link to='/seller/products' className='nav-link mb-1' onClick={closeDrawer}>Products</Link>
+                    <Link to='/seller/orders' className='nav-link mb-1' onClick={closeDrawer}>Orders</Link>
+                    <Link to='/seller/profile' className='nav-link mb-1' onClick={closeDrawer}>Shop Details</Link>
+                  </div>
+                )}
+                <hr />
+                <button 
+                  onClick={() => {
+                    logoutHandler();
+                    closeDrawer();
+                  }}
+                  className='btn btn-outline-danger w-100'
+                >
+                  Logout
+                </button>
+              </>
             ) : (
-              <Link to='/login' className='nav-link' onClick={closeDrawer}>
+              <Link to='/login' className='nav-link mb-2' onClick={closeDrawer}>
                 <FaUser /> Sign In
               </Link>
             )}
-            <NavDropdown title='Categories' id='categories-dropdown'>
-              <NavDropdown.Item as={Link} to='/category/footwear' onClick={closeDrawer}>Footwear</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/category/yeezy' onClick={closeDrawer}>Yeezy</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/category/nike' onClick={closeDrawer}>Nike</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/category/adidas' onClick={closeDrawer}>Adidas</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/category/jordans' onClick={closeDrawer}>Jordans</NavDropdown.Item>
-            </NavDropdown>
+
+            <hr />
+            <div className="overflow-auto" style={{ maxHeight: '40vh' }}>
+              <h6 className="px-3 mb-2 text-muted">Categories</h6>
+              {categories?.map((category) => (
+                <Link 
+                  key={category._id}
+                  to={category.path || `/category/${category.value}`}
+                  className='nav-link mb-1'
+                  onClick={closeDrawer}
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
