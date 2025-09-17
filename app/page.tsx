@@ -1,42 +1,81 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingBag, Star, Truck, Shield, Headphones } from "lucide-react"
+import { Star, ShoppingCart, Truck, Shield, RefreshCw } from "lucide-react"
 
-export default function HomePage() {
+export default function HomeScreen() {
+  const featuredProducts = [
+    {
+      id: 1,
+      name: "Premium Wireless Headphones",
+      price: 299.99,
+      originalPrice: 399.99,
+      image: "/premium-wireless-headphones.png",
+      rating: 4.8,
+      reviews: 124,
+      badge: "Best Seller",
+    },
+    {
+      id: 2,
+      name: "Smart Fitness Watch",
+      price: 199.99,
+      originalPrice: 249.99,
+      image: "/smart-fitness-watch.png",
+      rating: 4.6,
+      reviews: 89,
+      badge: "New",
+    },
+    {
+      id: 3,
+      name: "Laptop Backpack Pro",
+      price: 79.99,
+      originalPrice: 99.99,
+      image: "/laptop-backpack-professional.jpg",
+      rating: 4.7,
+      reviews: 156,
+      badge: "Sale",
+    },
+  ]
+
+  const categories = [
+    { name: "Electronics", image: "/electronics-category.png", count: "500+ items" },
+    { name: "Fashion", image: "/fashion-category.png", count: "800+ items" },
+    { name: "Home & Garden", image: "/home-garden-category.png", count: "300+ items" },
+    { name: "Sports", image: "/sports-collage.png", count: "250+ items" },
+  ]
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative px-4 py-12 md:py-20 lg:py-24">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
-            <div className="space-y-6 text-center lg:text-left">
-              <Badge variant="secondary" className="w-fit mx-auto lg:mx-0">
-                New Collection Available
-              </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance">
-                Shop the Latest
-                <span className="text-primary"> Fashion Trends</span>
+      <section className="relative bg-gradient-to-r from-blue-600 to-purple-700 text-white">
+        <div className="container mx-auto px-4 py-12 md:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="space-y-6">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-balance">
+                Discover Amazing Products at Unbeatable Prices
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl text-pretty">
-                Discover premium quality products at unbeatable prices. From fashion to electronics, we have everything
-                you need.
+              <p className="text-lg md:text-xl text-blue-100 text-pretty">
+                Shop from thousands of products with fast delivery, secure payments, and excellent customer service.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button size="lg" className="text-base px-8">
-                  <ShoppingBag className="mr-2 h-5 w-5" />
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+                  <ShoppingCart className="mr-2 h-5 w-5" />
                   Shop Now
                 </Button>
-                <Button variant="outline" size="lg" className="text-base px-8 bg-transparent">
-                  View Collections
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
+                >
+                  Explore Categories
                 </Button>
               </div>
             </div>
-            <div className="relative">
+            <div className="hidden lg:block">
               <img
-                src="/modern-ecommerce-hero.png"
-                alt="Featured products"
-                className="w-full h-auto rounded-2xl shadow-2xl"
+                src="/ecommerce-hero-shopping-illustration.jpg"
+                alt="Shopping illustration"
+                className="w-full h-auto rounded-lg shadow-2xl"
               />
             </div>
           </div>
@@ -44,83 +83,66 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-12 md:py-16 bg-muted/50">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Truck className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">Free Shipping</h3>
-                <p className="text-muted-foreground">
-                  Free shipping on orders over $50. Fast and reliable delivery worldwide.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Shield className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">Secure Payment</h3>
-                <p className="text-muted-foreground">
-                  Your payment information is processed securely with industry-standard encryption.
-                </p>
-              </CardContent>
-            </Card>
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Headphones className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold">24/7 Support</h3>
-                <p className="text-muted-foreground">
-                  Get help whenever you need it with our round-the-clock customer support.
-                </p>
-              </CardContent>
-            </Card>
+      <section className="py-12 md:py-16 bg-muted/50">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="flex items-center space-x-3 p-4">
+              <Truck className="h-8 w-8 text-blue-600" />
+              <div>
+                <h3 className="font-semibold">Free Shipping</h3>
+                <p className="text-sm text-muted-foreground">On orders over $50</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-4">
+              <Shield className="h-8 w-8 text-green-600" />
+              <div>
+                <h3 className="font-semibold">Secure Payment</h3>
+                <p className="text-sm text-muted-foreground">100% protected</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-4">
+              <RefreshCw className="h-8 w-8 text-orange-600" />
+              <div>
+                <h3 className="font-semibold">Easy Returns</h3>
+                <p className="text-sm text-muted-foreground">30-day policy</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-4">
+              <Star className="h-8 w-8 text-yellow-600" />
+              <div>
+                <h3 className="font-semibold">Top Quality</h3>
+                <p className="text-sm text-muted-foreground">Premium products</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="px-4 py-12 md:py-16">
-        <div className="container mx-auto max-w-7xl">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-balance">Featured Products</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-pretty">
-              Discover our handpicked selection of trending products
+      {/* Categories Section */}
+      <section className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Shop by Category</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Explore our wide range of categories and find exactly what you're looking for
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[1, 2, 3, 4].map((item) => (
-              <Card key={item} className="group cursor-pointer hover:shadow-lg transition-shadow">
-                <CardContent className="p-0">
-                  <div className="relative overflow-hidden rounded-t-lg">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {categories.map((category, index) => (
+              <Card
+                key={index}
+                className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <CardContent className="p-4">
+                  <div className="aspect-square mb-4 overflow-hidden rounded-lg">
                     <img
-                      src={`/generic-product-display.png?height=300&width=300&query=product ${item} ecommerce`}
-                      alt={`Product ${item}`}
-                      className="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                      src={category.image || "/placeholder.svg"}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <Badge className="absolute top-3 left-3">New</Badge>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <h3 className="font-semibold text-lg">Premium Product {item}</h3>
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      ))}
-                      <span className="text-sm text-muted-foreground ml-2">(124)</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="space-x-2">
-                        <span className="text-xl font-bold">$99.99</span>
-                        <span className="text-sm text-muted-foreground line-through">$129.99</span>
-                      </div>
-                      <Button size="sm">Add to Cart</Button>
-                    </div>
-                  </div>
+                  <h3 className="font-semibold text-center mb-1">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground text-center">{category.count}</p>
                 </CardContent>
               </Card>
             ))}
@@ -128,24 +150,81 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="px-4 py-12 md:py-16 bg-primary text-primary-foreground">
-        <div className="container mx-auto max-w-4xl text-center space-y-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-balance">Ready to Start Shopping?</h2>
-          <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto text-pretty">
-            Join thousands of satisfied customers and discover amazing deals on premium products.
+      {/* Featured Products Section */}
+      <section className="py-12 md:py-16 bg-muted/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Featured Products</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Discover our handpicked selection of trending and popular products
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredProducts.map((product) => (
+              <Card
+                key={product.id}
+                className="group cursor-pointer hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <img
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      className="w-full h-64 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge
+                      className="absolute top-3 left-3"
+                      variant={product.badge === "Sale" ? "destructive" : "default"}
+                    >
+                      {product.badge}
+                    </Badge>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold mb-2 text-balance">{product.name}</h3>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-medium ml-1">{product.rating}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold">${product.price}</span>
+                        <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+                      </div>
+                      <Button size="sm">
+                        <ShoppingCart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Button variant="outline" size="lg">
+              View All Products
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-12 md:py-16 bg-blue-600 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Stay Updated</h2>
+          <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+            Subscribe to our newsletter and be the first to know about new products, exclusive deals, and special
+            offers.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-base px-8">
-              Browse All Products
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-base px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
-            >
-              Sign Up for Deals
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-2 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <Button className="bg-white text-blue-600 hover:bg-blue-50">Subscribe</Button>
           </div>
         </div>
       </section>
